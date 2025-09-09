@@ -2,7 +2,7 @@
 
 ## Workflow
 
-1. Clone the reposistory
+1. Clone the repository
 
 - For HTTPS:
 
@@ -46,14 +46,14 @@ conflict between your branch and `main` branch before pushing.
   - `fix`: for code changes to fix bugs
   - `style`: for code changes that only alter code styles e.g. indentation, semicolon,..
   - `docs`: for changes that only affect documentation
-  - `refactor`: for code changes that does affect app beahaviour
+  - `refactor`: for code changes that do not affect app beahaviour
   - `chore`: miscellaneous changes e.g. update dependencies, lockfile, ...
 - If your changes introduce breaking changes, it must be marked by a `!` symbol
   e.g. `feat(homepage)!: change url of homepage to /home`
 
 5. Pushing your branch and create a Pull Request (PR):
 
-You must first push your changes to your own branch in the remote reposistory
+You must first push your changes to your own branch in the remote repository
 
 ```bash
 git push -u origin [your branch name]
