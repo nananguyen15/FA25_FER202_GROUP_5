@@ -8,7 +8,7 @@ assignment branch from the main branch. To create a new assignment branch, run
 this in your terminal:
 
 ```sh
-git fetch origin/assignment && git checkout assignment/<your-assignment-name> origin/assignment
+git fetch origin && git checkout assignment/<your-assignment-name> origin/assignment/base
 ```
 
 It is encouraged that you use the assignment name for easier identification.
