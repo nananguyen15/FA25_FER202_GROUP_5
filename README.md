@@ -17,4 +17,14 @@ It is encouraged that you use the assignment name for easier identification.
 
 View the base branch [here]("https://github.com/nananguyen15/FA25_FER202_GROUP_5/tree/assignment")
 
-The list of assignments is here:
+When you finish your assignment and pushed to your own branch, add your the link
+to your branch to the list below. This file use Markdown (which you should learn
+if you haven't already), so to add a new element to the list, simply put:
+
+```
+- [<Your assignment name>](<your assignment link>)
+```
+
+Assignment List:
+
+-
