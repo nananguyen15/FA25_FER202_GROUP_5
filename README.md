@@ -61,3 +61,4 @@ Assignment List:
 - Slot 2
   - [Template Literals](https://github.com/nananguyen15/FA25_FER202_GROUP_5/tree/assignment/template-literails)
   - [Promises](https://github.com/nananguyen15/FA25_FER202_GROUP_5/tree/assignment/promises)
+  - [Arrow-function](https://github.com/nananguyen15/FA25_FER202_GROUP_5/tree/assignment/arrow-function)
