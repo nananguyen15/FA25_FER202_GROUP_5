@@ -46,7 +46,7 @@ cd <your-project-name> && npm install
 
 ## Assignments
 
-View the base branch [here](https://github.com/nananguyen15/FA25_FER202_GROUP_5/tree/assignment)
+View the base branch [here](https://github.com/nananguyen15/FA25_FER202_GROUP_5/tree/assignment/base)
 
 When you finish your assignment and pushed to your own branch, return to the
 base branch to add the link to your part to the list. This file use Markdown
