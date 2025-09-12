@@ -4,14 +4,28 @@
 
 This is the base branch of class assignments. You are expected to create a
 separate branch for each assignment based on this branch. You MUST NOT create an
-assignment branch from the main branch. To create a new assignment branch, run
-this in your terminal:
+assignment branch from the main branch. To clone this base branch, run:
 
 ```sh
-git fetch origin && git checkout assignment/<your-assignment-name> origin/assignment/base
+git fetch origin && git checkout -b assignment/base origin/assignment/base
+```
+
+To create a new assignment branch, run:
+
+```sh
+git fetch origin && git checkout -b assignment/<your-branch> assignment/base
 ```
 
 It is encouraged that you use the assignment name for easier identification.
+
+After finishing your assignment, add all changes, commit them,
+and push to the remote repo with:
+
+```sh
+git add .
+git commit -m "your commit message"
+git push origin
+```
 
 ## Create Vite
 
