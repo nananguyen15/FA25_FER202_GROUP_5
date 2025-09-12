@@ -19,7 +19,7 @@ export default function App() {
   return (
     <div style={{ padding: "2rem" }}>
       <h2>Q2.1 Destructuring Assignment</h2>
-      <p>
+      <p style={{ textAlign: "left" }}>
         <strong>Array destructuring:</strong> Cho mảng arr = [10, 20, 30]; Dùng
         destructuring để lấy phần tử đầu tiên và thứ hai.
       </p>
