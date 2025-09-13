@@ -2,7 +2,7 @@
 
 ## Assignment
 
-Each assignment will live in a separate repository named `assignment/<assignment-name>`.
+Each assignment will live in a separate branch named `assignment/<assignment-name>`.
 The list of the all assignment can be found at [assignment/base](https://github.com/nananguyen15/FA25_FER202_GROUP_5/tree/assignment/base)
 
 ## This Branch
