@@ -62,7 +62,7 @@ create table series
 
 create table sup_category
 (
-    id     int          not null
+    id     int auto_increment
         primary key,
     name   varchar(255) null,
     active bit          not null
@@ -77,7 +77,7 @@ create table sub_category
     description longtext     null,
     discount_id bigint       not null,
     active      bit          not null,
-    constraint FK8wpb5yj29ehdvislyp5vugp4v
+    constraint sub_category_sup_category_id_fk
         foreign key (sup_cat_id) references sup_category (id)
 );
 
@@ -135,7 +135,7 @@ create table user
     phone    varchar(255)                null,
     address  varchar(255)                null,
     image    varchar(255)                null,
-    active   tinyint(1)                  null,
+    active   bit                         not null,
     constraint email
         unique (email),
     constraint username

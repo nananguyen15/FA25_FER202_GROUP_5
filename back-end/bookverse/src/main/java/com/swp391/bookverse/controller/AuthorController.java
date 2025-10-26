@@ -31,7 +31,7 @@ public class AuthorController {
          return response;
     }
 
-    @GetMapping("/get-all")
+    @GetMapping
     public APIResponse<List<AuthorResponse>> getAuthors(){
         APIResponse<List<AuthorResponse>> response = new APIResponse<>();
         response.setResult(authorService.getAuthors());
@@ -45,7 +45,6 @@ public class AuthorController {
 
     @PutMapping("/update/{authorId}")
     public AuthorResponse updateAuthor(@PathVariable("authorId") Long authorId, @RequestBody @Valid AuthorUpdateRequest request) {
-        System.out.println("Received request to update user with ID: " + authorId);
         return authorService.updateAuthor(authorId, request);
     }
 

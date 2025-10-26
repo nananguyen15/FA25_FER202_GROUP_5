@@ -55,6 +55,7 @@ public enum ErrorCode {
     SUBCATEGORY_NOT_FOUND(6002, "Sub-category not found"),
     NO_SUBCATEGORIES_STORED(6003, "No sub-categories stored in database"),
 
+
     INVALID_KEY(99999, "Invalid message key provided")
     ;
 
