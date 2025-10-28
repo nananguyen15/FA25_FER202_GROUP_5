@@ -18,7 +18,7 @@ import java.util.List;
  * @Author huangdat
  */
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api/publishers")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PublisherController {
@@ -46,5 +46,19 @@ public class PublisherController {
     @PutMapping("/update/{PublisherId}")
     public PublisherResponse updatePublisher(@PathVariable("PublisherId") Long publisherId, @RequestBody @Valid PublisherUpdateRequest request) {
         return publisherService.updatePublisher(publisherId, request);
+    }
+
+    @GetMapping("/active")
+    public APIResponse<List<PublisherResponse>> getActivePublishers(){
+        APIResponse<List<PublisherResponse>> response = new APIResponse<>();
+        response.setResult(publisherService.getActivePublishers());
+        return response;
+    }
+
+    @GetMapping("/inactive")
+    public APIResponse<List<PublisherResponse>> getInactivePublishers() {
+        APIResponse<List<PublisherResponse>> response = new APIResponse<>();
+        response.setResult(publisherService.getInactivePublishers());
+        return response;
     }
 }

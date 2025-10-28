@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @Author huangdat
+ */
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -70,6 +73,26 @@ public class BookController {
         return bookService.updateBook(bookId, request);
     }
 
+    @GetMapping("/active/random")
+    public APIResponse<List<BookResponse>> getRandomActiveBooks() {
+        APIResponse<List<BookResponse>> response;
+        response = bookService.getRandomActiveBooks();
+        return response;
+    }
 
+//    @GetMapping("/active/search")
+//    public APIResponse<List<BookResponse>> searchActiveBooks(@RequestParam("keyword") String keyword) {
+//        APIResponse<List<BookResponse>> response;
+//        response = bookService.searchActiveBooks(keyword);
+//        return response;
+//    }
+
+
+//    @GetMapping("/active/top-selling")
+//    public APIResponse<List<BookResponse>> getTopSellingActiveBooks() {
+//        APIResponse<List<BookResponse>> response;
+//        response = bookService.getTopSellingActiveBooks();
+//        return response;
+//    }
 
 }

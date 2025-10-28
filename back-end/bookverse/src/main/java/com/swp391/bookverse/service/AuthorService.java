@@ -79,9 +79,35 @@ public class AuthorService {
         // fetch existing author from DB by ID. Throw exception if not found
         Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.AUTHOR_NOT_FOUND));
         authorMapper.updateAuthor(request, existingAuthor);
-
-
         return authorMapper.toAuthorResponse(authorRepository.save(existingAuthor));
+    }
+
+    public List<AuthorResponse> getActiveAuthors() {
+        // throw exception if there are no active authors stored in DB
+        if (authorRepository.countByActiveTrue() == 0) {
+            throw new AppException(ErrorCode.NO_AUTHORS_STORED);
+        }
+        // transfer list of active Author to list of AuthorResponse
+        List<Author> activeAuthors = authorRepository.findByActiveTrue();
+        List<AuthorResponse> activeAuthorResponses = new ArrayList<>(activeAuthors.size());
+        for (int i = 0; i < activeAuthors.size(); i++) {
+            activeAuthorResponses.add(authorMapper.toAuthorResponse(activeAuthors.get(i)));
+        }
+        return activeAuthorResponses;
+    }
+
+    public List<AuthorResponse> getInactiveAuthors() {
+        // throw exception if there are no inactive authors stored in DB
+        if (authorRepository.countByActiveFalse() == 0) {
+            throw new AppException(ErrorCode.NO_AUTHORS_STORED);
+        }
+        // transfer list of inactive Author to list of AuthorResponse
+        List<Author> inactiveAuthors = authorRepository.findByActiveFalse();
+        List<AuthorResponse> inactiveAuthorResponses = new ArrayList<>(inactiveAuthors.size());
+        for (int i = 0; i < inactiveAuthors.size(); i++) {
+            inactiveAuthorResponses.add(authorMapper.toAuthorResponse(inactiveAuthors.get(i)));
+        }
+        return inactiveAuthorResponses;
     }
 
 }

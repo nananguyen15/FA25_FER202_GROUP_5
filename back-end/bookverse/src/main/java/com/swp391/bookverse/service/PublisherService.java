@@ -59,10 +59,39 @@ public class PublisherService {
         // check if publisher with the given id exists
         Publisher publisher = publisherRepository.findById(publisherId)
                 .orElseThrow(() -> new AppException(ErrorCode.PUBLISHER_NOT_FOUND));
+        // check if the updated name already exists in db
+        if (publisherRepository.existsByNameIgnoreCase(request.getName())) {
+            throw new AppException(ErrorCode.PUBLISHER_EXISTS);
+        }
+
         // update publisher entity with the provided request data
         publisherMapper.updatePublisher(request, publisher);
         // save the updated publisher entity and map it to PublisherResponse
         Publisher updatedPublisher = publisherRepository.save(publisher);
         return publisherMapper.toPublisherResponse(updatedPublisher);
+    }
+
+    public List<PublisherResponse> getActivePublishers() {
+        // check if there are any active publishers stored in DB
+        if (publisherRepository.countByActiveTrue() == 0) {
+            throw new AppException(ErrorCode.NO_PUBLISHERS_STORED);
+        }
+        // map list of active Publisher to list of PublisherResponse
+        List<Publisher> activePublishers = publisherRepository.findByActiveTrue();
+        return activePublishers.stream()
+                .map(publisherMapper::toPublisherResponse)
+                .toList();
+    }
+
+    public List<PublisherResponse> getInactivePublishers() {
+        // check if there are any inactive publishers stored in DB
+        if (publisherRepository.countByActiveFalse() == 0) {
+            throw new AppException(ErrorCode.NO_PUBLISHERS_STORED);
+        }
+        // map list of inactive Publisher to list of PublisherResponse
+        List<Publisher> inactivePublishers = publisherRepository.findByActiveFalse();
+        return inactivePublishers.stream()
+                .map(publisherMapper::toPublisherResponse)
+                .toList();
     }
 }

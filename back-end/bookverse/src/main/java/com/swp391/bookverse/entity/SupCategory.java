@@ -19,7 +19,6 @@ public class SupCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-
     String name;
     @Column(nullable = false)
     Boolean active;

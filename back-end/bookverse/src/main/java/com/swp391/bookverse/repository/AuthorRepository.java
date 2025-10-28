@@ -17,4 +17,12 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     boolean existsByName(String name);
     // Find authors whose names contain a specific keyword (case-insensitive)
     List<Author> findByNameContainingIgnoreCase(String keyword);
+
+    int countByActiveTrue();
+
+    List<Author> findByActiveTrue();
+
+    int countByActiveFalse();
+
+    List<Author> findByActiveFalse();
 }

@@ -48,4 +48,18 @@ public class AuthorController {
         return authorService.updateAuthor(authorId, request);
     }
 
+    @GetMapping("/active")
+    public APIResponse<List<AuthorResponse>> getActiveAuthors(){
+        APIResponse<List<AuthorResponse>> response = new APIResponse<>();
+        response.setResult(authorService.getActiveAuthors());
+        return response;
+    }
+
+    @GetMapping("/inactive")
+    public APIResponse<List<AuthorResponse>> getInactiveAuthors() {
+        APIResponse<List<AuthorResponse>> response = new APIResponse<>();
+        response.setResult(authorService.getInactiveAuthors());
+        return response;
+    }
+
 }

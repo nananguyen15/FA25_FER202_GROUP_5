@@ -1,6 +1,7 @@
 package com.swp391.bookverse.dto.request;
 
-import jakarta.persistence.Column;
+import com.swp391.bookverse.entity.SupCategory;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,8 +13,15 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE) // Set default access level for fields to private
-public class SupCategoryCreationRequest {
+public class SubCategoryCreationRequest {
+    Integer supCategoryId;
     String name;
+
+    @Lob
+    String description;
+
+//    Long discountId;
+
     @Column(nullable = false)
     Boolean active;
 }

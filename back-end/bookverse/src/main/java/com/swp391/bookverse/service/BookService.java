@@ -152,6 +152,12 @@ public class BookService {
         return mapToBookResponse(updatedBook);
     }
 
+    /**
+     * Change the active status of a book by its ID.
+     * @param isActive new active status
+     * @param bookId ID the book to be updated
+     * @return APIResponse containing the updated BookActiveResponse
+     */
     public APIResponse<BookActiveResponse> changeActiveBookById(Boolean isActive, Long bookId) {
         Book existingBook = bookRepository.findById(bookId)
                 .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_FOUND));
@@ -164,6 +170,39 @@ public class BookService {
         return response;
     }
 
+    /**
+     * Get a list of random active books.
+     * @return APIResponse containing a list of BookResponse objects
+     */
+    public APIResponse<List<BookResponse>> getRandomActiveBooks() {
+        // Filter active books
+        List<Book> activeBooks = bookRepository.findAll().stream()
+                .filter(Book::getActive)
+                .toList();
+        // Check if there are any active books
+        if (activeBooks.isEmpty()) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+        // Select up to 10 random active books
+        else {
+            APIResponse<List<BookResponse>> response = new APIResponse<>();
+            List<BookResponse> bookResponses = new ArrayList<>();
+            int count = Math.min(10, activeBooks.size());
+            for (int i = 0; i < count; i++) {
+                Book book = activeBooks.get((int) (Math.random() * activeBooks.size()));
+                BookResponse bookResponse = mapToBookResponse(book);
+                bookResponses.add(bookResponse);
+            }
+            response.setResult(bookResponses);
+            return response;
+        }
+    }
+
+    /**
+     *  Map the Book entity to a BookActiveResponse.
+     * @param book the book entity
+     * @return the mapped BookActiveResponse
+     */
     private BookActiveResponse mapToBookActiveResponse(Book book) {
         return BookActiveResponse.builder()
                 .id(book.getId())
@@ -201,6 +240,11 @@ public class BookService {
                 .build();
     }
 
+    /**
+     * Map the Book entity to a BookResponse.
+     * @param book the book entity
+     * @return the mapped BookResponse
+     */
     private BookResponse mapToBookResponse(Book book) {
         return BookResponse.builder()
                 .id(book.getId())

@@ -28,6 +28,9 @@ public class SubCategory {
 
     @Lob
     String description;
+
+//    Long discountId;
+
     @Column(nullable = false)
     Boolean active;
 }
