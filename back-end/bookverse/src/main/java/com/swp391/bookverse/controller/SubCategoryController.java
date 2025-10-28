@@ -60,5 +60,5 @@ public class SubCategoryController {
         APIResponse<List<SubCategoryResponse>> response = new APIResponse<>();
         response.setResult(subCategoryService.getInactiveSubCategories());
         return response;
-
+    }
 }

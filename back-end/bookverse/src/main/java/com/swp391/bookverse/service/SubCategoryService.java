@@ -71,7 +71,30 @@ public class SubCategoryService {
         return mapToSubCategoryResponse(subCategory);
     }
 
-
+    public List<SubCategoryResponse> getActiveSubCategories() {
+        List<SubCategory> subCategories = subCategoryRepository.findAll()
+                .stream()
+                .filter(SubCategory::getActive)
+                .toList();
+        if (subCategories.isEmpty()) {
+            throw new AppException(ErrorCode.NO_SUBCATEGORIES_STORED);
+        }
+        return subCategories.stream()
+                .map(this::mapToSubCategoryResponse)
+                .toList();
+    }
+    public List<SubCategoryResponse> getInactiveSubCategories() {
+        List<SubCategory> subCategories = subCategoryRepository.findAll()
+                .stream()
+                .filter(subCategory -> !subCategory.getActive())
+                .toList();
+        if (subCategories.isEmpty()) {
+            throw new AppException(ErrorCode.NO_SUBCATEGORIES_STORED);
+        }
+        return subCategories.stream()
+                .map(this::mapToSubCategoryResponse)
+                .toList();
+    }
 
     private SubCategory mapToSubCategoryEntity(SubCategoryCreationRequest request) {
         SupCategory supCategory = supCategoryRepository.findById(request.getSupCategoryId())
