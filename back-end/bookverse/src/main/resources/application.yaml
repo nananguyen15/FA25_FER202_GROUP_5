@@ -37,6 +37,14 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
 
+# src/main/resources/application.yaml
+cors:
+  allowed-origins:
+    - "http://localhost:3000"
+    - "http://127.0.0.1:3000"
+    - "http://localhost:5173" # Vite React default port
+    - "http://127.0.0.1:5173"
+
 
 
 
