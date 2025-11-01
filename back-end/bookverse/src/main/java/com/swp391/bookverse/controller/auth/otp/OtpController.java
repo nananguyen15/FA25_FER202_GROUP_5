@@ -2,7 +2,7 @@ package com.swp391.bookverse.controller.auth.otp;
 
 import com.swp391.bookverse.dto.APIResponse;
 import com.swp391.bookverse.dto.request.auth.otp.SendByEmailRequest;
-import com.swp391.bookverse.dto.request.auth.otp.SendForUserRequest;
+// import com.swp391.bookverse.dto.request.auth.otp.SendForUserRequest;
 import com.swp391.bookverse.dto.request.auth.otp.VerifyRequest;
 import com.swp391.bookverse.service.auth.otp.OtpService;
 import org.springframework.http.ResponseEntity;

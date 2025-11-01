@@ -16,4 +16,5 @@ public class SendByEmailRequest {
     @Email(message = "EMAIL_INVALID")
     String email;
     String tokenType; // default: LOGIN
+    String userId;
 }

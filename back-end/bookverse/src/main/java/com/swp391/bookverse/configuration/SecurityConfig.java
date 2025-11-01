@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     // JWT signing key, used to sign and verify JWT tokens.
     @NonFinal
@@ -42,7 +44,7 @@ public class SecurityConfig {
     // Define endpoint access rules based on user roles and HTTP methods
 
     String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "/api/otp/**"};
-    String[] PUBLIC_GET_ENDPOINTS = {"api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "api/sub-categories/**"};
+    String[] PUBLIC_GET_ENDPOINTS = {"api/users/is-active/**","api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "api/sub-categories/**"};
 
     String[] ADMIN_GET_ENDPOINTS = {"api/users/**"};
     String[] ADMIN_POST_ENDPOINTS = {"api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "/api/sub-categories/**"};
@@ -53,7 +55,6 @@ public class SecurityConfig {
     String[] STAFF_POST_ENDPOINTS = {""};
     String[] STAFF_PUT_ENDPOINTS = {""};
     String[] STAFF_DELETE_ENDPOINTS = {""};
-
 
     /**
      * Configures the security filter chain for the application.

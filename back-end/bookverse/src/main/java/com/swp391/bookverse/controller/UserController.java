@@ -28,9 +28,7 @@ public class UserController {
     @PostMapping("/create")
     public APIResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
         APIResponse<User> response = new APIResponse<>();
-
         response.setResult(userService.createUser(request));
-
        return response;
     }
 
@@ -38,6 +36,13 @@ public class UserController {
     public APIResponse<List<UserResponse>> getUsers(){
         APIResponse<List<UserResponse>> response = new APIResponse<>();
         response.setResult(userService.getUsers());
+        return response;
+    }
+
+    @PostMapping("signup")
+    public APIResponse<UserResponse> signupUser(@RequestBody @Valid UserCreationRequest request) {
+        APIResponse<UserResponse> response = new APIResponse<>();
+        response.setResult(userService.signupUser(request));
         return response;
     }
 
@@ -70,6 +75,11 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("/is-active/{userId}")
+    public Boolean isActiveUser(@PathVariable("userId") String userId) {
+        return userService.isActiveUser(userId);
+    }
+
     @GetMapping("/active")
     public APIResponse<List<UserResponse>> getActiveUsers() {
         APIResponse<List<UserResponse>> response = new APIResponse<>();
@@ -84,12 +94,12 @@ public class UserController {
         return response;
     }
 
-    @PutMapping("active/{userId}")
+    @PutMapping("/active/{userId}")
     public UserResponse restoreUser(@PathVariable("userId") String userId) {
         return userService.changeActiveUserById(true, userId);
     }
 
-    @PutMapping("inactive/{userId}")
+    @PutMapping("/inactive/{userId}")
     public UserResponse deleteUser(@PathVariable("userId") String userId) {
         return userService.changeActiveUserById(false, userId);
     }
