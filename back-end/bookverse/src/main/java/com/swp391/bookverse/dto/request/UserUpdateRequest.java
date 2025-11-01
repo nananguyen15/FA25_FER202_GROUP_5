@@ -1,7 +1,7 @@
 package com.swp391.bookverse.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,15 +18,18 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE) // Set default access level for fields to private
 public class UserUpdateRequest {
-    @Size(min = 3, message = "USERNAME_INVALID")
-    String username;
-    @Size(min = 8, message = "PASSWORD_INVALID")
+//    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "USERNAME_INVALID") // Only allows letters, numbers, and underscores
+//    @Size(min = 8, max = 32, message = "USERNAME_INVALID")
+//    String username;
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "USERNAME_INVALID") // Only allows letters, numbers, and underscores
+    @Size(min = 8, max = 16, message = "PASSWORD_INVALID")
     String password;
-    @Size(min = 3, message = "NAME_INVALID")
+//    @Email(message = "EMAIL_INVALID")
+//    String email;
+    @Size(max = 255, message = "FULLNAME_INVALID")
     String name;
-    @Email(message = "EMAIL_INVALID")
-    String email;
-    @Past(message = "BIRTH_DATE_INVALID")
-    LocalDate birthDate;
-
+    @Pattern(regexp = "0[3-9]\\d{8,9}", message = "PHONE_INVALID") // Matches Vietnamese phone numbers. E.g., 0912345678
+    String phone;
+    String address;
+    String image;
 }

@@ -1,7 +1,7 @@
 package com.swp391.bookverse.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,15 +18,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE) // Set default access level for fields to private
 public class UserCreationRequest {
-    @Size(min = 3, message = "USERNAME_INVALID")
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "USERNAME_INVALID") // Only allows letters, numbers, and underscores
+    @Size(min = 8, max = 32, message = "USERNAME_INVALID")
     String username;
-    @Size(min = 8, message = "PASSWORD_INVALID")
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "USERNAME_INVALID") // Only allows letters, numbers, and underscores
+    @Size(min = 8, max = 16, message = "PASSWORD_INVALID")
     String password;
-    @Size(min = 3, message = "NAME_INVALID")
-    String name;
     @Email(message = "EMAIL_INVALID")
     String email;
-    @Past(message = "BIRTH_DATE_INVALID")
-    LocalDate birthDate;
 
+    boolean active;
 }

@@ -4,8 +4,7 @@
 
 # Tech Stack
 ## Frontend
-- React.js (with hooks and functional components)
-- Axios (API calls)
+- React.js 
 - TailwindCSS / Bootstrap (if applicable for styling)
 
 ## Backend
@@ -17,9 +16,11 @@
 - Managed with MySQL Workbench / JetBrains DataGrip
 
 # Tools & Utilities
+- IntelliJ Ultimate (IDE)
+- DataGrip and MySQL Workbench (DBMS)
 - Docker (containerization)
 - Git & GitHub (version control)
-- Maven / Gradle (dependency management)
+- Maven (dependency management)
 
 # Features
 - User authentication and authorization
@@ -36,11 +37,11 @@
 - Admin: Full access (create, update, delete users, assign roles)
 
 # API Documentation
-- Swagger UI: http://localhost:8080/swagger-ui/index.html
+- Swagger UI: http://localhost:8080/bookverse/docs
 - Postman Collection: (Add link if you export one)
 
 # Testing
-- Backend unit tests with JUnit & Mockito
+- Backend unit tests with JUnit
 - Manual API testing with Postman
 - UI testing with React Testing Library (optional)
 
@@ -51,4 +52,4 @@
 # License
 This project is licensed under the MIT License – see the LICENSE.md file for details.
 
-⚡ Developed with ❤️ using Spring Boot, React, and MySQL
+⚡ Developed with ❤️ using Spring Boot, React, Docker, IntelliJ, DataGrip and MySQL

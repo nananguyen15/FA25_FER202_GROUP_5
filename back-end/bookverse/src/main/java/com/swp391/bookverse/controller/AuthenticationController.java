@@ -20,11 +20,10 @@ import java.text.ParseException;
 /**
  * @Author huangdat
  */
-
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
     AuthenticationService authenticationService;
 
@@ -68,4 +67,5 @@ public class AuthenticationController {
                         .build())
                 .build();
     }
+
 }

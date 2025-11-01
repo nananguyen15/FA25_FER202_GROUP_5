@@ -1,10 +1,14 @@
 package com.swp391.bookverse.configuration;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,6 +30,8 @@ import java.nio.charset.StandardCharsets;
  * This class configures security settings, including JWT authentication.
  */
 @Configuration
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @EnableWebSecurity
 public class SecurityConfig {
     // JWT signing key, used to sign and verify JWT tokens.
@@ -34,18 +40,19 @@ public class SecurityConfig {
     protected String SIGNER_KEY;
 
     // Define endpoint access rules based on user roles and HTTP methods
-    private final String[] PUBCLIC_POST_ENDPOINTS = {"/auth/token", "/auth/introspect", "/users"};
-    private final String[] PUBLIC_GET_ENDPOINTS = {""};
 
-    private final String[] ADMIN_GET_ENDPOINTS = {"/users"};
-    private final String[] ADMIN_POST_ENDPOINTS = {""};
-    private final String[] ADMIN_PUT_ENDPOINTS = {""};
-    private final String[] ADMIN_DELETE_ENDPOINTS = {""};
+    String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "/api/otp/**"};
+    String[] PUBLIC_GET_ENDPOINTS = {"api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "api/sub-categories/**"};
 
-    private final String[] STAFF_GET_ENDPOINTS = {""};
-    private final String[] STAFF_POST_ENDPOINTS = {""};
-    private final String[] STAFF_PUT_ENDPOINTS = {""};
-    private final String[] STAFF_DELETE_ENDPOINTS = {""};
+    String[] ADMIN_GET_ENDPOINTS = {"api/users/**"};
+    String[] ADMIN_POST_ENDPOINTS = {"api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "/api/sub-categories/**"};
+    String[] ADMIN_PUT_ENDPOINTS = {"api/authors/**" , "api/books/**", "api/publishers/**", "api/sup-categories/**", "/api/sub-categories/**","api/users/**"};
+    String[] ADMIN_DELETE_ENDPOINTS = {""};
+
+    String[] STAFF_GET_ENDPOINTS = {""};
+    String[] STAFF_POST_ENDPOINTS = {""};
+    String[] STAFF_PUT_ENDPOINTS = {""};
+    String[] STAFF_DELETE_ENDPOINTS = {""};
 
 
     /**
@@ -57,11 +64,22 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        // Configure endpoints and their access rules. If endpoints are not specified, all requests are authenticated by default.
+        httpSecurity.cors(Customizer.withDefaults());
+
+        // Define authorization rules for different endpoints and HTTP methods based on user roles and scopes in JWT
         httpSecurity.authorizeHttpRequests(request ->
                 request
-                        .requestMatchers(HttpMethod.POST, PUBCLIC_POST_ENDPOINTS).permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/docs"              // because springdoc.swagger-ui.path = /docs
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, ADMIN_PUT_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());
 
         // Configure ability to use form login and basic authentication

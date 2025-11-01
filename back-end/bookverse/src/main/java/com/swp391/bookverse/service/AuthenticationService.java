@@ -78,7 +78,7 @@ public class AuthenticationService {
         Set<String> roles = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)).getRoles();
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(username)
-                .issuer("http://localhost:8080")
+                .issuer("http://localhost:8080/bookverse")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()

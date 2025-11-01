@@ -1,5 +1,6 @@
 package com.swp391.bookverse.dto.response;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,9 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.Set;
 
+/**
+ * @Author huangdat
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,9 +21,12 @@ import java.util.Set;
 public class UserResponse {
     String id;
     String username;
-    String password;
-    String name;
     String email;
-    LocalDate birthDate;
+    String name;
+    String phone;
+    String address;
+    String image;
+    boolean active;
+
     Set<String> roles; // Set of roles assigned to the user, e.g., "USER", "ADMIN", "MODERATOR", etc.
 }

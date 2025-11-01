@@ -20,9 +20,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-@Service // This annotation indicates that this class is a service component in the Spring context.
-@RequiredArgsConstructor // Generates a constructor with required arguments for final fields.
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) // Sets the default access level for fields to private and makes them final.
+/**
+ * @Author huangdat
+ */
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
@@ -71,11 +74,6 @@ public class UserService {
             usersResponses.add(userMapper.toUserResponse(users.get(i)));
         }
 
-        // log retrieved users for debugging purposes
-        System.out.println("Retrieved " + usersResponses.size() + " users from the repository.");
-        for (UserResponse userResponse : usersResponses) {
-            System.out.println("User: " + userResponse.getUsername() + ", Email: " + userResponse.getEmail());
-        }
         // Fetch all users from the repository
         return usersResponses;
     }
@@ -109,16 +107,86 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(existingUser));
     }
 
-    /**
-     * Deletes a user from the system by their ID.
-     * @param id  the ID of the user to delete
-     */
-    public void deleteUser(String id) {
+    public UserResponse changeUserRole(String id) {
         // Fetch the existing user by ID
-        User existingUser = userRepository.findById(id).orElse(null);
-        if (existingUser == null) {
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        // Toggle between CUSTOMER and STAFF roles
+        if (existingUser.getRoles().contains(Role.CUSTOMER.name())) {
+            existingUser.getRoles().remove(Role.CUSTOMER.name());
+            existingUser.getRoles().add(Role.STAFF.name());
+        } else if (existingUser.getRoles().contains(Role.STAFF.name())) {
+            existingUser.getRoles().remove(Role.STAFF.name());
+            existingUser.getRoles().add(Role.CUSTOMER.name());
         }
-        userRepository.delete(existingUser);
+
+        return userMapper.toUserResponse(userRepository.save(existingUser));
+    }
+
+    public List<UserResponse> getCustomers(){
+        // throw exception if there are no user entity store in DB
+        if (userRepository.count() == 0) {
+            throw new AppException(ErrorCode.NO_USERS_STORED);
+        }
+        // Fetch users with role CUSTOMER
+        List<User> customers = userRepository.findByRolesContaining(Role.CUSTOMER.name());
+        List<UserResponse> customerResponses = new ArrayList<>(customers.size());
+        for (User customer : customers) {
+            customerResponses.add(userMapper.toUserResponse(customer));
+        }
+        return customerResponses;
+    }
+
+    public List<UserResponse> getStaffs(){
+        // throw exception if there are no user entity store in DB
+        if (userRepository.count() == 0) {
+            throw new AppException(ErrorCode.NO_USERS_STORED);
+        }
+        //  Fetch users with role STAFF
+        List<User> staffs = userRepository.findByRolesContaining(Role.STAFF.name());
+        List<UserResponse> staffResponses = new ArrayList<>(staffs.size());
+        for (User staff : staffs) {
+            staffResponses.add(userMapper.toUserResponse(staff));
+        }
+        return staffResponses;
+    }
+
+    public List<UserResponse> getActiveUsers() {
+        // throw exception if there are no user entity store in DB
+        if (userRepository.count() == 0) {
+            throw new AppException(ErrorCode.NO_USERS_STORED);
+        }
+
+        // Fetch users who are active
+        List<User> activeUsers = userRepository.findAll().stream().filter(User::isActive).toList();
+        List<UserResponse> activeUserResponses = new ArrayList<>(activeUsers.size());
+        for (User activeUser : activeUsers) {
+            activeUserResponses.add(userMapper.toUserResponse(activeUser));
+        }
+        return activeUserResponses;
+    }
+
+    public List<UserResponse> getInactiveUsers() {
+        // throw exception if there are no user entity store in DB
+        if (userRepository.count() == 0) {
+            throw new AppException(ErrorCode.NO_USERS_STORED);
+        }
+
+        // Fetch users who are inactive
+        List<User> inactiveUsers = userRepository.findAll().stream().filter(user -> !user.isActive()).toList();
+        List<UserResponse> inactiveUserResponses = new ArrayList<>(inactiveUsers.size());
+        for (User inactiveUser : inactiveUsers) {
+            inactiveUserResponses.add(userMapper.toUserResponse(inactiveUser));
+        }
+        return inactiveUserResponses;
+    }
+
+    public UserResponse changeActiveUserById(boolean active, String id) {
+        // Fetch the existing user by ID
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        existingUser.setActive(active);
+
+        return userMapper.toUserResponse(userRepository.save(existingUser));
     }
 }

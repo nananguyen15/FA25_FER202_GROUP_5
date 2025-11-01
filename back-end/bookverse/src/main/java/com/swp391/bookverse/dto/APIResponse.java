@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE) // Set default access level for fields to private
 public class APIResponse <T> {
-    int code = 200; // Default response code if not providedz
+    int code = 200; // Default response code if not provided
     String message;
     T result;
 }

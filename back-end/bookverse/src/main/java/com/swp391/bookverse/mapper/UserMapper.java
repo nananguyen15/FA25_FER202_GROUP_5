@@ -16,7 +16,7 @@ import org.mapstruct.MappingTarget;
 public interface UserMapper {
     User toUser(UserCreationRequest request);
 
-    @Mapping(target = "password", ignore = true)
+//    @Mapping(target = "password", ignore = true)
 //    @Mapping(source = "id", target = "id")
     UserResponse toUserResponse(User user);
 
