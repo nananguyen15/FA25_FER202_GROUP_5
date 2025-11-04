@@ -39,7 +39,7 @@ public class UserController {
         return response;
     }
 
-    @PostMapping("signup")
+    @PostMapping("/signup")
     public APIResponse<UserResponse> signupUser(@RequestBody @Valid UserCreationRequest request) {
         APIResponse<UserResponse> response = new APIResponse<>();
         response.setResult(userService.signupUser(request));
@@ -49,6 +49,22 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserResponse getUser(@PathVariable("userId") String userId) {
         return userService.getUserById(userId);
+    }
+
+    /**
+     * Get current logged-in user's information
+     * @return APIResponse<UserResponse> containing user's information
+     */
+    @GetMapping("/myInfo")
+    public APIResponse<UserResponse> getMyInfo() {
+        APIResponse<UserResponse> response = new APIResponse<>();
+        response.setResult(userService.getMyInfo());
+        return response;
+    }
+
+    @PutMapping("/myInfo")
+    public UserResponse updateMyInfo(@RequestBody @Valid UserUpdateRequest request) {
+        return userService.updateMyInfo(request);
     }
 
     @PutMapping("/update/{userId}")

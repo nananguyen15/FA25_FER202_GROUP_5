@@ -21,6 +21,7 @@ public enum ErrorCode {
     USER_EXISTS(1001, "User already exists"),
     USER_NOT_FOUND(1002, "User not found"),
     NO_USERS_STORED(1003, "No users stored in database"),
+    EMAIL_ALREADY_EXISTS(1010, "Email already exists"),
 
     // Validation error codes for user entity
     USERNAME_INVALID(1004, "Username must be at least 3 characters long"),
@@ -59,6 +60,7 @@ public enum ErrorCode {
     SUP_CATEGORY_EXISTS(7001, "Sup-category already exists"),
     SUP_CATEGORY_NOT_FOUND(7002, "Sup-category not found"),
     NO_SUP_CATEGORIES_STORED(7003, "No sup-categories stored in database"),
+
 
     INVALID_KEY(99999, "Invalid message key provided")
     ;

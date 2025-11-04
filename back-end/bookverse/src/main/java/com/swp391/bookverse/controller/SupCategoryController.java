@@ -2,6 +2,7 @@ package com.swp391.bookverse.controller;
 
 import com.swp391.bookverse.dto.APIResponse;
 import com.swp391.bookverse.dto.request.SupCategoryCreationRequest;
+import com.swp391.bookverse.dto.response.SubCategoryResponse;
 import com.swp391.bookverse.dto.response.SupCategoryResponse;
 import com.swp391.bookverse.entity.SupCategory;
 import com.swp391.bookverse.service.SupCategoryService;
@@ -40,6 +41,13 @@ public class SupCategoryController {
     public APIResponse<SupCategoryResponse> getSupCategoryById(@PathVariable("supCategoryId") Integer supCategoryId) {
         APIResponse<SupCategoryResponse> response = new APIResponse<>();
         response.setResult(supCategoryService.getSupCategoryById(supCategoryId));
+        return response;
+    }
+
+    @GetMapping("/{supCategoryId}/sub-categories")
+    public APIResponse<List<SubCategoryResponse>> getSubCategoriesBySupCategoryId(@PathVariable("supCategoryId") Integer supCategoryId) {
+        APIResponse<List<SubCategoryResponse>> response = new APIResponse<>();
+        response.setResult(supCategoryService.getSubCategoriesBySupCategoryId(supCategoryId));
         return response;
     }
 

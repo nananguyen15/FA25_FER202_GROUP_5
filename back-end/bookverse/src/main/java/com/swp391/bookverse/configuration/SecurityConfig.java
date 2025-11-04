@@ -43,8 +43,8 @@ public class SecurityConfig {
 
     // Define endpoint access rules based on user roles and HTTP methods
 
-    String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "/api/otp/**"};
-    String[] PUBLIC_GET_ENDPOINTS = {"api/users/is-active/**","api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "api/sub-categories/**"};
+    String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "api/users/signup", "/api/otp/**"};
+    String[] PUBLIC_GET_ENDPOINTS = {"api/users/myInfo","api/users/is-active/**","api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "api/sub-categories/**"};
 
     String[] ADMIN_GET_ENDPOINTS = {"api/users/**"};
     String[] ADMIN_POST_ENDPOINTS = {"api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "/api/sub-categories/**"};
@@ -78,7 +78,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+//                        .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, ADMIN_PUT_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());
