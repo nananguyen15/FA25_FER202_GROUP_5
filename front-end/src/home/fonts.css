@@ -1,0 +1,11 @@
+@font-face {
+  /* font-family: 'StylishCalligraphyDemo';
+  src: url('../assets/font/StylishCalligraphyDemo-XPZZ.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal; */
+
+  font-family: 'LovelyHome';
+  src: url('../assets/font/LovelyHome-9aBZ.ttf')  format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
