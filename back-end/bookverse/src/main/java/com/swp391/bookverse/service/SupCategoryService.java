@@ -2,11 +2,14 @@ package com.swp391.bookverse.service;
 
 
 import com.swp391.bookverse.dto.request.SupCategoryCreationRequest;
+import com.swp391.bookverse.dto.response.SubCategoryResponse;
 import com.swp391.bookverse.dto.response.SupCategoryResponse;
+import com.swp391.bookverse.entity.SubCategory;
 import com.swp391.bookverse.entity.SupCategory;
 import com.swp391.bookverse.exception.AppException;
 import com.swp391.bookverse.exception.ErrorCode;
 import com.swp391.bookverse.mapper.SupCategoryMapper;
+import com.swp391.bookverse.repository.SubCategoryRepository;
 import com.swp391.bookverse.repository.SupCategoryRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ import java.util.List;
 public class SupCategoryService {
     SupCategoryRepository supCategoryRepository;
     SupCategoryMapper supCategoryMapper;
+    SubCategoryRepository subCategoryRepository;
 
     public SupCategoryResponse createSupCategory(SupCategoryCreationRequest request) {
         // check if sup category name already exists
@@ -46,6 +50,24 @@ public class SupCategoryService {
         List<SupCategory> supCategories = supCategoryRepository.findAll();
         return supCategories.stream()
                 .map(supCategoryMapper::toSupCategoryResponse)
+                .toList();
+    }
+
+    public List<SubCategoryResponse> getSubCategoriesBySupCategoryId(Integer supCategoryId) {
+        // find sup category by id or throw exception if not found
+        SupCategory supCategory = supCategoryRepository.findById(supCategoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.SUP_CATEGORY_NOT_FOUND));
+        // get sub categories by sup category
+        List<SubCategory> subCategories = subCategoryRepository.findBySupCategory(supCategory);
+        // map list of SubCategory to list of SubCategoryResponse
+        return subCategories.stream()
+                .map(subCategory -> new SubCategoryResponse(
+                        subCategory.getId(),
+                        subCategory.getSupCategory().getId(),
+                        subCategory.getName(),
+                        subCategory.getDescription(),
+                        subCategory.getActive()
+                ))
                 .toList();
     }
 

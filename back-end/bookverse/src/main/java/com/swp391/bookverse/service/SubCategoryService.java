@@ -1,12 +1,15 @@
 package com.swp391.bookverse.service;
 
 import com.swp391.bookverse.dto.request.SubCategoryCreationRequest;
+import com.swp391.bookverse.dto.response.BookResponse;
 import com.swp391.bookverse.dto.response.SubCategoryResponse;
+import com.swp391.bookverse.entity.Book;
 import com.swp391.bookverse.entity.SubCategory;
 import com.swp391.bookverse.entity.SupCategory;
 import com.swp391.bookverse.exception.AppException;
 import com.swp391.bookverse.exception.ErrorCode;
 import com.swp391.bookverse.mapper.SubCategoryMapper;
+import com.swp391.bookverse.repository.BookRepository;
 import com.swp391.bookverse.repository.SubCategoryRepository;
 import com.swp391.bookverse.repository.SupCategoryRepository;
 import lombok.AccessLevel;
@@ -26,6 +29,7 @@ public class SubCategoryService {
     SubCategoryMapper subCategoryMapper;
     SubCategoryRepository subCategoryRepository;
     SupCategoryRepository supCategoryRepository;
+    BookRepository bookRepository;
 
     public SubCategoryResponse createSubCategory(SubCategoryCreationRequest request) {
         // check if sub-category exists
@@ -46,6 +50,32 @@ public class SubCategoryService {
         }
         return subCategories.stream()
                 .map(this::mapToSubCategoryResponse)
+                .toList();
+    }
+
+    public List<BookResponse> getActiveBooksBySubCategoryId(Long subCategoryId) {
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.SUBCATEGORY_NOT_FOUND));
+        // find by sub-category id and active true
+        List<Book> books = bookRepository.findByCategoryAndActive(subCategory, true);
+        if (books.isEmpty()) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+        // map list of Book to list of BookResponse
+        return books.stream()
+                .map(book -> BookResponse.builder()
+                        .id(book.getId())
+                        .title(book.getTitle())
+                        .description(book.getDescription())
+                        .price(book.getPrice())
+                        .authorId(book.getAuthor() != null ? book.getAuthor().getId() : null)
+                        .publisherId(book.getPublisher() != null ? book.getPublisher().getId() : null)
+                        .categoryId(book.getCategory() != null ? book.getCategory().getId() : null)
+                        .stockQuantity(book.getStockQuantity())
+                        .publishedDate(book.getPublishedDate())
+                        .image(book.getImage())
+                        .active(book.getActive())
+                        .build())
                 .toList();
     }
 

@@ -2,6 +2,7 @@ package com.swp391.bookverse.controller;
 
 import com.swp391.bookverse.dto.APIResponse;
 import com.swp391.bookverse.dto.request.SubCategoryCreationRequest;
+import com.swp391.bookverse.dto.response.BookResponse;
 import com.swp391.bookverse.dto.response.SubCategoryResponse;
 import com.swp391.bookverse.service.SubCategoryService;
 import lombok.AccessLevel;
@@ -38,6 +39,13 @@ public class SubCategoryController {
     public APIResponse<SubCategoryResponse> getSubCategoryById(@PathVariable("subCategoryId") Long subCategoryId) {
         APIResponse<SubCategoryResponse> response = new APIResponse<>();
         response.setResult(subCategoryService.getSubCategoryById(subCategoryId));
+        return response;
+    }
+
+    @GetMapping("/{subCategoryId}/active-books")
+    public APIResponse<List<BookResponse>> getActiveBooksBySubCategoryId(@PathVariable("subCategoryId") Long subCategoryId) {
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        response.setResult(subCategoryService.getActiveBooksBySubCategoryId(subCategoryId));
         return response;
     }
 

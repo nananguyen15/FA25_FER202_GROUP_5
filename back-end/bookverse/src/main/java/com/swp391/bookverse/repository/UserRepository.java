@@ -1,6 +1,7 @@
 package com.swp391.bookverse.repository;
 
 import com.swp391.bookverse.entity.User;
+import jakarta.validation.constraints.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +18,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     List<User> findByRolesContaining(String role);
 
+    boolean existsByEmail(@Email(message = "EMAIL_INVALID") String email);
 }

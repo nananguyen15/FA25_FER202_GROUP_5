@@ -9,6 +9,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+<<<<<<< HEAD
+=======
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+>>>>>>> origin/backend/base
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,6 +37,7 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     // JWT signing key, used to sign and verify JWT tokens.
     @NonFinal
@@ -41,19 +46,31 @@ public class SecurityConfig {
 
     // Define endpoint access rules based on user roles and HTTP methods
 
+<<<<<<< HEAD
     String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "/api/otp/**"};
     String[] PUBLIC_GET_ENDPOINTS = {"api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "api/sub-categories/**"};
+=======
+    String[] PUBLIC_POST_ENDPOINTS = {"api/auth/token", "api/auth/introspect", "api/users/create", "api/users/signup", "/api/otp/**"};
+    String[] PUBLIC_GET_ENDPOINTS = {"api/users/myInfo","api/users/is-active/**","api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "api/sub-categories/**"};
+>>>>>>> origin/backend/base
 
     String[] ADMIN_GET_ENDPOINTS = {"api/users/**"};
     String[] ADMIN_POST_ENDPOINTS = {"api/authors/**", "api/books/**", "api/publishers/**", "api/sup-categories/**", "/api/sub-categories/**"};
     String[] ADMIN_PUT_ENDPOINTS = {"api/authors/**" , "api/books/**", "api/publishers/**", "api/sup-categories/**", "/api/sub-categories/**","api/users/**"};
     String[] ADMIN_DELETE_ENDPOINTS = {""};
+<<<<<<< HEAD
 
     String[] STAFF_GET_ENDPOINTS = {""};
     String[] STAFF_POST_ENDPOINTS = {""};
     String[] STAFF_PUT_ENDPOINTS = {""};
     String[] STAFF_DELETE_ENDPOINTS = {""};
+=======
+>>>>>>> origin/backend/base
 
+    String[] STAFF_GET_ENDPOINTS = {""};
+    String[] STAFF_POST_ENDPOINTS = {""};
+    String[] STAFF_PUT_ENDPOINTS = {""};
+    String[] STAFF_DELETE_ENDPOINTS = {""};
 
     /**
      * Configures the security filter chain for the application.
@@ -77,7 +94,11 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
+<<<<<<< HEAD
                         .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+=======
+//                        .requestMatchers(HttpMethod.GET, ADMIN_GET_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
+>>>>>>> origin/backend/base
                         .requestMatchers(HttpMethod.POST, ADMIN_POST_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, ADMIN_PUT_ENDPOINTS).hasAnyAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());

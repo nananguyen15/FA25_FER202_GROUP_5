@@ -2,11 +2,12 @@ package com.swp391.bookverse.service.auth.otp;
 
 import com.swp391.bookverse.dto.APIResponse;
 import com.swp391.bookverse.dto.request.auth.otp.SendByEmailRequest;
-import com.swp391.bookverse.dto.request.auth.otp.SendForUserRequest;
+//import com.swp391.bookverse.dto.request.auth.otp.SendForUserRequest;
 import com.swp391.bookverse.dto.request.auth.otp.VerifyRequest;
 import com.swp391.bookverse.entity.auth.otp.OtpToken;
 import com.swp391.bookverse.exception.AppException;
 import com.swp391.bookverse.exception.ErrorCode;
+import com.swp391.bookverse.repository.UserRepository;
 import com.swp391.bookverse.repository.auth.otp.OtpTokenRepository;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,6 +36,7 @@ public class OtpService {
     SecureRandom rnd = new SecureRandom();
     Duration ttl = Duration.ofMinutes(5);
     int resendCooldownSec = 45;
+    UserRepository userRepo;
 
     @Transactional
     public APIResponse<?> sendOtpByEmail(SendByEmailRequest req) {
@@ -49,7 +51,7 @@ public class OtpService {
         String code = gen6Digit();
         OtpToken t = new OtpToken();
         t.setEmail(normEmail);
-        t.setUserId(null); // not linked yet
+        t.setUserId(req.getUserId()); // link to user
         t.setCode(code);
         t.setTokenType(req.getTokenType());
         t.setCreatedAt(Instant.now());
@@ -145,6 +147,16 @@ public class OtpService {
                     .code(500)
                     .message("Failed to verify OTP due to server error.")
                     .build();
+        }
+
+        // make user active based on userId
+        if (userIdOrNull != null && !userIdOrNull.isBlank()) {
+            userRepo.findById(userIdOrNull).ifPresent(user -> {
+                if (!user.isActive()) {
+                    user.setActive(true);
+                    userRepo.save(user);
+                }
+            });
         }
 
         // Return success response
