@@ -1,5 +1,9 @@
 package com.swp391.bookverse.exception;
 
+/**
+ * @Author huangdat
+ */
+
 public class AppException extends RuntimeException{
     private ErrorCode errorCode;
 

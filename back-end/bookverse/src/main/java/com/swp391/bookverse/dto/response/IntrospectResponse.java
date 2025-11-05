@@ -4,6 +4,9 @@ package com.swp391.bookverse.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * @Author huangdat
+ */
 @Data
 @Builder
 @NoArgsConstructor

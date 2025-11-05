@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * @Author huangdat
+ */
+
 @Data
 @Entity
 @Builder
@@ -24,6 +28,9 @@ public class SubCategory {
 
     @Lob
     String description;
+
+//    Long discountId;
+
     @Column(nullable = false)
     Boolean active;
 }

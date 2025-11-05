@@ -15,6 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.util.HashSet;
 
+/**
+ * @Author huangdat
+ */
+
 @Configuration
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -38,11 +42,14 @@ public class AppInitConfig {
 
                 User admin = User.builder()
                         .username("admin")
-                        .password(passwordEncoder.encode("admin123"))
+                        .password(passwordEncoder.encode("123456"))
                         .email("admin@gmail.com")
                         .name("admin name")
-                        .birthDate(LocalDate.now())
+                        .phone("0123456789")
+                        .address("admin address")
+                        .image("src/main/resources/static/images/avatar/admin-avatar.png")
                         .roles(roles)
+                        .active(true)
                         .build();
 
                 userRepository.save(admin);

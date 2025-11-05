@@ -14,46 +14,110 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @Author huangdat
+ */
+
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserController {
     UserService userService;
 
-    @PostMapping
+    @PostMapping("/create")
     public APIResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
         APIResponse<User> response = new APIResponse<>();
-
         response.setResult(userService.createUser(request));
-
        return response;
     }
 
     @GetMapping
     public APIResponse<List<UserResponse>> getUsers(){
-        System.out.println("Received request to get all users");
         APIResponse<List<UserResponse>> response = new APIResponse<>();
         response.setResult(userService.getUsers());
         return response;
     }
 
+    @PostMapping("/signup")
+    public APIResponse<UserResponse> signupUser(@RequestBody @Valid UserCreationRequest request) {
+        APIResponse<UserResponse> response = new APIResponse<>();
+        response.setResult(userService.signupUser(request));
+        return response;
+    }
+
     @GetMapping("/{userId}")
     public UserResponse getUser(@PathVariable("userId") String userId) {
-        System.out.println("Received request to get user by ID: " + userId);
         return userService.getUserById(userId);
     }
 
-    @PutMapping("/{userId}")
+    /**
+     * Get current logged-in user's information
+     * @return APIResponse<UserResponse> containing user's information
+     */
+    @GetMapping("/myInfo")
+    public APIResponse<UserResponse> getMyInfo() {
+        APIResponse<UserResponse> response = new APIResponse<>();
+        response.setResult(userService.getMyInfo());
+        return response;
+    }
+
+    @PutMapping("/myInfo")
+    public UserResponse updateMyInfo(@RequestBody @Valid UserUpdateRequest request) {
+        return userService.updateMyInfo(request);
+    }
+
+    @PutMapping("/update/{userId}")
     public UserResponse updateUser(@PathVariable("userId") String userId, @RequestBody @Valid UserUpdateRequest request) {
-        System.out.println("Received request to update user with ID: " + userId);
         return userService.updateUser(userId, request);
     }
 
-    @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable("userId") String userId) {
-        System.out.println("Received request to delete user with ID: " + userId);
-        userService.deleteUser(userId);
-        return "User with ID " + userId + " deleted successfully.";
+    @PutMapping("/change-role/{userId}")
+    public UserResponse changeUserRole(@PathVariable("userId") String userId) {
+        return userService.changeUserRole(userId);
     }
+
+    @GetMapping("/customers")
+    public APIResponse<List<UserResponse>> getCustomers(){
+        APIResponse<List<UserResponse>> response = new APIResponse<>();
+        response.setResult(userService.getCustomers());
+        return response;
+    }
+
+    @GetMapping("/staffs")
+    public APIResponse<List<UserResponse>> getStaffs(){
+        APIResponse<List<UserResponse>> response = new APIResponse<>();
+        response.setResult(userService.getStaffs());
+        return response;
+    }
+
+    @GetMapping("/is-active/{userId}")
+    public Boolean isActiveUser(@PathVariable("userId") String userId) {
+        return userService.isActiveUser(userId);
+    }
+
+    @GetMapping("/active")
+    public APIResponse<List<UserResponse>> getActiveUsers() {
+        APIResponse<List<UserResponse>> response = new APIResponse<>();
+        response.setResult(userService.getActiveUsers());
+        return response;
+    }
+
+    @GetMapping("/inactive")
+    public APIResponse<List<UserResponse>> getInactiveUsers() {
+        APIResponse<List<UserResponse>> response = new APIResponse<>();
+        response.setResult(userService.getInactiveUsers());
+        return response;
+    }
+
+    @PutMapping("/active/{userId}")
+    public UserResponse restoreUser(@PathVariable("userId") String userId) {
+        return userService.changeActiveUserById(true, userId);
+    }
+
+    @PutMapping("/inactive/{userId}")
+    public UserResponse deleteUser(@PathVariable("userId") String userId) {
+        return userService.changeActiveUserById(false, userId);
+    }
+
 }

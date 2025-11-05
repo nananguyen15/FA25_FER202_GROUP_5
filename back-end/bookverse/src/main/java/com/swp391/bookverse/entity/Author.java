@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * @Author huangdat
+ */
+
 @Data
 @Entity
 @Builder
@@ -14,7 +18,6 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     String image;
     @Column(nullable = false)
     String name;

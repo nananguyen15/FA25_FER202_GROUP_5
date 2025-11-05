@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor // Generates a constructor with required arguments for final fields.
@@ -74,14 +75,15 @@ public class AuthenticationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         // define the claims for the JWT
+        Set<String> roles = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)).getRoles();
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(username)
-                .issuer("https://your-issuer.com") // Replace with your actual issuer
+                .issuer("http://localhost:8080/bookverse")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
-                .claim("ok", "CustomValue")
+                .claim("scope", String.join(" ", roles))
                 .build();
 
         // Create a payload with the claims

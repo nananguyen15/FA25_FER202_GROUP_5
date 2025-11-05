@@ -3,6 +3,9 @@ package com.swp391.bookverse.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * @Author huangdat
+ */
 
 @Data
 @Builder
@@ -11,5 +14,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE) // Set default access level for fields to private
 public class AuthenticationRequest {
     String username;
+
     String password;
 }
