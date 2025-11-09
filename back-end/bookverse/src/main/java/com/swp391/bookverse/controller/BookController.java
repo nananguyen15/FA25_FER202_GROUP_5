@@ -115,6 +115,8 @@ public class BookController {
         return response;
     }
 
+
+>>>>>>> 363263ce5ad389486e6b89e2a5bd2b2854a616a5
     @GetMapping("/active/search/{title}")
     public APIResponse<List<BookResponse>> searchActiveBooksByTitle(@PathVariable("title") String title) {
         APIResponse<List<BookResponse>> response;

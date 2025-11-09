@@ -1,5 +1,4 @@
-package com.swp391.bookverse.dto.response;
-
+package com.swp391.bookverse.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,9 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE) // Set default access level for fields to private
-public class IntrospectResponse {
-    boolean valid;
-    String username;
-    String id;
-    String role;
+public class CartItemUpdateRequest {
+    Long bookId;
+    Integer quantity;
 }
