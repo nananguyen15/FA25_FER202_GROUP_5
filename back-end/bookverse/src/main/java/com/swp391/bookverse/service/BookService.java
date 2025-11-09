@@ -21,7 +21,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -199,6 +201,97 @@ public class BookService {
     }
 
     /**
+     *  Get a list of active books sorted by newest published date.
+     * @return APIResponse containing a list of BookResponse objects
+     */
+    public APIResponse<List<BookResponse>> getActiveBooksSortedByNewest() {
+        // Create a MUTABLE list
+        List<Book> activeBooks = new ArrayList<>(
+            bookRepository.findAll().stream()
+                .filter(Book::getActive)
+                .toList()
+        );
+
+        if (activeBooks.isEmpty()) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+
+        activeBooks.sort((b1, b2) -> b2.getPublishedDate().compareTo(b1.getPublishedDate()));
+
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        List<BookResponse> bookResponses = activeBooks.stream()
+            .map(this::mapToBookResponse)
+            .collect(Collectors.toList());
+
+        response.setResult(bookResponses);
+        return response;
+    }
+
+    public APIResponse<List<BookResponse>> getActiveBooksSortedByOldest() {
+        List<BookResponse> bookResponses = bookRepository.findAll().stream()
+            .filter(Book::getActive)
+            .sorted(Comparator.comparing(Book::getPublishedDate))
+            .map(this::mapToBookResponse)
+            .collect(Collectors.toList());
+
+        if (bookResponses.isEmpty()) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        response.setResult(bookResponses);
+        return response;
+    }
+
+    public APIResponse<List<BookResponse>> getActiveBooksSortedByPriceAsc() {
+        List<BookResponse> bookResponses = bookRepository.findAll().stream()
+            .filter(Book::getActive)
+            .sorted(Comparator.comparing(Book::getPrice))
+            .map(this::mapToBookResponse)
+            .collect(Collectors.toList());
+
+        if (bookResponses.isEmpty()) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        response.setResult(bookResponses);
+        return response;
+    }
+
+    public APIResponse<List<BookResponse>> getActiveBooksSortedByPriceDesc() {
+        List<BookResponse> bookResponses = bookRepository.findAll().stream()
+            .filter(Book::getActive)
+            .sorted((b1, b2) -> b2.getPrice().compareTo(b1.getPrice()))
+            .map(this::mapToBookResponse)
+            .collect(Collectors.toList());
+
+        if (bookResponses.isEmpty()) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        response.setResult(bookResponses);
+        return response;
+    }
+
+    public APIResponse<List<BookResponse>> getActiveBooksSortedByTitleAsc() {
+        List<BookResponse> bookResponses = bookRepository.findAll().stream()
+            .filter(Book::getActive)
+            .sorted(Comparator.comparing(Book::getTitle))
+            .map(this::mapToBookResponse)
+            .collect(Collectors.toList());
+
+        if (bookResponses.isEmpty()) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        response.setResult(bookResponses);
+        return response;
+    }
+
+    /**
      *  Map the Book entity to a BookActiveResponse.
      * @param book the book entity
      * @return the mapped BookActiveResponse
@@ -259,5 +352,21 @@ public class BookService {
                 .image(book.getImage())
                 .active(book.getActive())
                 .build();
+    }
+
+
+    public APIResponse<List<BookResponse>> searchActiveBooksByTitle(String title) {
+        List<BookResponse> bookResponses = bookRepository.findAll().stream()
+            .filter(book -> book.getActive() && book.getTitle().toLowerCase().contains(title.toLowerCase()))
+            .map(this::mapToBookResponse)
+            .collect(Collectors.toList());
+
+        if (bookResponses.isEmpty()) {
+            throw new AppException(ErrorCode.NO_BOOKS_STORED);
+        }
+
+        APIResponse<List<BookResponse>> response = new APIResponse<>();
+        response.setResult(bookResponses);
+        return response;
     }
 }
