@@ -22,11 +22,11 @@ export function mapBookWithNames(
     ...book,
     authorName: author?.name || `Author ${book.authorId}`,
     publisherName: publisher?.name || `Publisher ${book.publisherId}`,
-    // Fix image path: backend returns /src/assets/img/... but Vite public folder is at /img/...
-    // public/img/book/hp1.webp -> accessed as /img/book/hp1.webp
+    // Backend now stores /img/... directly, but keep backward compatibility
     image:
-      book.image?.replace("/src/assets/img/", "/img/") ||
-      "/img/book/placeholder.jpg",
+      book.image?.startsWith("/img/") 
+        ? book.image 
+        : book.image?.replace("/src/assets/img/", "/img/") || "/img/book/placeholder.jpg",
   };
 }
 

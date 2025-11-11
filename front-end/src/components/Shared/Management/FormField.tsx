@@ -56,7 +56,7 @@ export function InputField({
   return (
     <input
       type={type}
-      value={value}
+      value={value ?? ""}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       required={required}

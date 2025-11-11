@@ -83,20 +83,71 @@ export const usersApi = {
     return response.data.result;
   },
 
-  // POST create user (admin) - correct endpoint
-  create: async (data: Partial<User> & { password?: string; roles?: string[] }): Promise<User> => {
+  // POST create user (admin) - with image upload support
+  create: async (data: Partial<User> & { password?: string; roles?: string[]; imageFile?: File }): Promise<User> => {
+    const formData = new FormData();
+    
+    // Add text fields
+    if (data.username) formData.append('username', data.username);
+    if (data.password) formData.append('password', data.password);
+    if (data.email) formData.append('email', data.email);
+    if (data.name) formData.append('name', data.name);
+    if (data.phone) formData.append('phone', data.phone);
+    if (data.address) formData.append('address', data.address);
+    if (data.active !== undefined) formData.append('active', String(data.active));
+    
+    // Add roles
+    if (data.roles && data.roles.length > 0) {
+      data.roles.forEach(role => formData.append('roles', role));
+    }
+    
+    // Add image - either file or URL string
+    if (data.imageFile) {
+      // File upload
+      formData.append('image', data.imageFile);
+    } else if (data.image) {
+      // URL/path string
+      formData.append('imageUrl', data.image);
+    }
+
     const response = await apiClient.post<ApiResponse<User>>(
       `${USERS_ENDPOINT}/create`,
-      data
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     return response.data.result;
   },
 
-  // PUT update user - correct endpoint
-  update: async (userId: string, data: Partial<User>): Promise<User> => {
+  // PUT update user - with image upload support
+  update: async (userId: string, data: Partial<User> & { imageFile?: File }): Promise<User> => {
+    const formData = new FormData();
+    
+    // Add text fields (only if provided)
+    if (data.name !== undefined) formData.append('name', data.name);
+    if (data.phone !== undefined) formData.append('phone', data.phone);
+    if (data.address !== undefined) formData.append('address', data.address);
+    
+    // Add image - either file or URL string
+    if (data.imageFile) {
+      // File upload
+      formData.append('image', data.imageFile);
+    } else if (data.image !== undefined) {
+      // URL/path string (create empty file to satisfy multipart requirement)
+      formData.append('imageUrl', data.image);
+    }
+
     const response = await apiClient.put<ApiResponse<User>>(
       `${USERS_ENDPOINT}/update/${userId}`,
-      data
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     return response.data.result;
   },

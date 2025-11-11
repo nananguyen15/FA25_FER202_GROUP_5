@@ -51,6 +51,9 @@ export function StaffManagement() {
     address: "",
   });
 
+  // Image file state
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   // Load staffs
   useEffect(() => {
     loadStaffs();
@@ -131,32 +134,55 @@ export function StaffManagement() {
         alert("Username không được để trống!");
         return;
       }
+
+      // Validate username length (backend requires 8-32 characters)
+      if (formData.username.trim().length < 8) {
+        alert("Username phải có ít nhất 8 ký tự!");
+        return;
+      }
+
+      if (formData.username.trim().length > 32) {
+        alert("Username không được vượt quá 32 ký tự!");
+        return;
+      }
+
       if (!formData.email || !formData.email.trim()) {
         alert("Email không được để trống!");
         return;
       }
 
       // Prepare create data with default password and active status
-      const createData = {
+      const createData: any = {
         username: formData.username.trim(),
         email: formData.email.trim(),
         password: "Welcome123", // Default password
         name: formData.name ? formData.name.trim() : "",
         phone: formData.phone ? formData.phone.trim() : "",
         address: formData.address ? formData.address.trim() : "",
-        image: formData.image || "",
         active: true, // Default active for new staff
         roles: ["STAFF"],
       };
+
+      // Handle image
+      if (imageFile) {
+        // User uploaded a file
+        createData.imageFile = imageFile;
+      } else if (formData.image && formData.image.trim()) {
+        // User entered a URL/path
+        createData.image = formData.image.trim();
+      }
 
       await usersApi.create(createData);
       alert("Tạo nhân viên thành công!\nPassword mặc định: Welcome123");
       setShowCreateModal(false);
       resetForm();
       loadStaffs();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating staff:", error);
-      alert("Không thể tạo nhân viên");
+
+      // Show specific error message if available
+      const errorMessage = error.response?.data?.message || "Không thể tạo nhân viên";
+      alert(errorMessage);
     }
   };
 
@@ -180,12 +206,22 @@ export function StaffManagement() {
         updateData.address = formData.address.trim();
       }
 
-      if (formData.image) {
-        updateData.image = formData.image;
+      // Handle image update
+      if (imageFile) {
+        // User uploaded a new file
+        console.log("✅ Adding imageFile to update:", imageFile.name, imageFile.size);
+        updateData.imageFile = imageFile;
+      } else if (formData.image && formData.image.trim()) {
+        // User entered a URL/path (no file upload)
+        console.log("✅ Adding image URL to update:", formData.image);
+        updateData.image = formData.image.trim();
+      } else {
+        console.log("⚠️ No image update");
       }
 
       console.log("📞 Phone value:", formData.phone);
       console.log("📤 Sending update data:", updateData);
+      console.log("📤 updateData keys:", Object.keys(updateData));
 
       await usersApi.update(selectedUser.id, updateData);
       alert("Cập nhật thành công!");
@@ -240,6 +276,7 @@ export function StaffManagement() {
       address: "",
       image: "",
     });
+    setImageFile(null);
     setSelectedUser(null);
   };
 
@@ -327,7 +364,7 @@ export function StaffManagement() {
         <table className="w-full">
           <thead className="bg-beige-100">
             <tr>
-              <TableHeader>ID</TableHeader>
+              <TableHeader>No.</TableHeader>
               <TableHeader>Avatar</TableHeader>
               <TableHeader>Username</TableHeader>
               <TableHeader>Name</TableHeader>
@@ -346,13 +383,15 @@ export function StaffManagement() {
                 </td>
               </tr>
             ) : (
-              paginatedStaffs.map((staff) => (
+              paginatedStaffs.map((staff, index) => (
                 <tr
                   key={staff.id}
                   className="transition-colors hover:bg-beige-50"
                 >
                   <TableCell>
-                    <TableCellText className="font-mono text-xs">{staff.id}</TableCellText>
+                    <TableCellText className="font-semibold text-gray-700">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </TableCellText>
                   </TableCell>
                   <TableCell>
                     <img
@@ -450,6 +489,7 @@ export function StaffManagement() {
           <UserForm
             formData={formData}
             onUpdate={setFormData}
+            onImageUpload={setImageFile}
             isEdit={false}
             showPassword={false}
             showImageUpload={true}
@@ -484,6 +524,7 @@ export function StaffManagement() {
           <UserForm
             formData={formData}
             onUpdate={setFormData}
+            onImageUpload={setImageFile}
             isEdit={true}
             showPassword={false}
             showImageUpload={true}

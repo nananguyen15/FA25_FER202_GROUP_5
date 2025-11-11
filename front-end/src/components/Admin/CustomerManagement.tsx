@@ -51,6 +51,9 @@ export function CustomerManagement() {
     address: "",
   });
 
+  // Image file state
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   // Load customers
   useEffect(() => {
     loadCustomers();
@@ -71,6 +74,13 @@ export function CustomerManagement() {
       } else {
         data = await usersApi.getCustomers();
       }
+
+      // DEBUG: Log image paths from API
+      console.log("🔍 Customer image paths from API:", data.slice(0, 3).map(u => ({
+        username: u.username,
+        image: u.image,
+        transformed: transformImageUrl(u.image)
+      })));
 
       setCustomers(data);
     } catch (error) {
@@ -131,32 +141,55 @@ export function CustomerManagement() {
         alert("Username is required!");
         return;
       }
+
+      // Validate username length (backend requires 8-32 characters)
+      if (formData.username.trim().length < 8) {
+        alert("Username must be at least 8 characters long!");
+        return;
+      }
+
+      if (formData.username.trim().length > 32) {
+        alert("Username must not exceed 32 characters!");
+        return;
+      }
+
       if (!formData.email || !formData.email.trim()) {
         alert("Email is required!");
         return;
       }
 
-      // Prepare create data with default password and active status
-      const createData = {
+      // Prepare create data with file
+      const createData: any = {
         username: formData.username.trim(),
         email: formData.email.trim(),
         password: "Welcome123", // Default password
         name: formData.name ? formData.name.trim() : "",
         phone: formData.phone ? formData.phone.trim() : "",
         address: formData.address ? formData.address.trim() : "",
-        image: formData.image || "",
         active: true, // Default active for new customer
         roles: ["CUSTOMER"],
       };
+
+      // Handle image
+      if (imageFile) {
+        // User uploaded a file
+        createData.imageFile = imageFile;
+      } else if (formData.image && formData.image.trim()) {
+        // User entered a URL/path
+        createData.image = formData.image.trim();
+      }
 
       await usersApi.create(createData);
       alert("Customer created successfully!\nDefault password: Welcome123");
       setShowCreateModal(false);
       resetForm();
       loadCustomers();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating customer:", error);
-      alert("Failed to create customer");
+
+      // Show specific error message if available
+      const errorMessage = error.response?.data?.message || "Failed to create customer";
+      alert(errorMessage);
     }
   };
 
@@ -164,7 +197,7 @@ export function CustomerManagement() {
     if (!selectedUser) return;
 
     try {
-      // Prepare update data - don't send username (backend doesn't allow username update)
+      // Prepare update data
       const updateData: any = {};
 
       // Only include fields if they have values
@@ -180,12 +213,22 @@ export function CustomerManagement() {
         updateData.address = formData.address.trim();
       }
 
-      if (formData.image) {
-        updateData.image = formData.image;
+      // Handle image update
+      if (imageFile) {
+        // User uploaded a new file
+        console.log("✅ Adding imageFile to update:", imageFile.name, imageFile.size);
+        updateData.imageFile = imageFile;
+      } else if (formData.image && formData.image.trim()) {
+        // User entered a URL/path (no file upload)
+        console.log("✅ Adding image URL to update:", formData.image);
+        updateData.image = formData.image.trim();
+      } else {
+        console.log("⚠️ No image update");
       }
 
       console.log("📞 Phone value:", formData.phone);
       console.log("📤 Sending update data:", updateData);
+      console.log("📤 updateData keys:", Object.keys(updateData));
 
       await usersApi.update(selectedUser.id, updateData);
       alert("Customer updated successfully!");
@@ -240,6 +283,7 @@ export function CustomerManagement() {
       address: "",
       image: "",
     });
+    setImageFile(null);
     setSelectedUser(null);
   };
 
@@ -327,7 +371,7 @@ export function CustomerManagement() {
         <table className="w-full">
           <thead className="bg-beige-100">
             <tr>
-              <TableHeader>ID</TableHeader>
+              <TableHeader>No.</TableHeader>
               <TableHeader>Avatar</TableHeader>
               <TableHeader>Username</TableHeader>
               <TableHeader>Name</TableHeader>
@@ -346,10 +390,12 @@ export function CustomerManagement() {
                 </td>
               </tr>
             ) : (
-              paginatedCustomers.map((customer) => (
+              paginatedCustomers.map((customer, index) => (
                 <tr key={customer.id} className="transition-colors hover:bg-beige-50">
                   <TableCell>
-                    <TableCellText className="font-mono text-xs">{customer.id}</TableCellText>
+                    <TableCellText className="font-semibold text-gray-700">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </TableCellText>
                   </TableCell>
                   <TableCell>
                     <img
@@ -443,6 +489,7 @@ export function CustomerManagement() {
           <UserForm
             formData={formData}
             onUpdate={setFormData}
+            onImageUpload={setImageFile}
             isEdit={false}
             showPassword={false}
             showImageUpload={true}
@@ -477,6 +524,7 @@ export function CustomerManagement() {
           <UserForm
             formData={formData}
             onUpdate={setFormData}
+            onImageUpload={setImageFile}
             isEdit={true}
             showPassword={false}
             showImageUpload={true}

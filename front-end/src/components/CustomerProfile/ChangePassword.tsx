@@ -37,13 +37,13 @@ export function ChangePassword() {
   const onSubmit = async (data: PasswordFormValues) => {
     try {
       setIsLoading(true);
-      
+
       // Call API with correct field names: oldPassword and newPassword
       await usersApi.changeMyPassword({
         oldPassword: data.currentPassword,
         newPassword: data.newPassword,
       });
-      
+
       alert("Password changed successfully!");
       reset();
     } catch (error: any) {

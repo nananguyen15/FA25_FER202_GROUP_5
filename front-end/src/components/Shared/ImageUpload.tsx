@@ -4,6 +4,7 @@ import { FaUpload, FaLink, FaTimes } from "react-icons/fa";
 interface ImageUploadProps {
   value: string;
   onChange: (imageUrl: string) => void;
+  onImageUpload?: (file: File | null) => void; // Add this prop for File object
   label?: string;
   type?: "avatar" | "cover" | "square";
   folder?: "book" | "author" | "publisher" | "avatar" | "series";
@@ -19,6 +20,7 @@ interface ImageUploadProps {
 export function ImageUpload({
   value,
   onChange,
+  onImageUpload,
   label = "Image",
   type = "cover",
   folder = "book",
@@ -60,7 +62,7 @@ export function ImageUpload({
       return;
     }
 
-    // Create preview
+    // Create preview ONLY for display (not saved to formData)
     const reader = new FileReader();
     reader.onloadend = () => {
       const previewDataUrl = reader.result as string;
@@ -68,27 +70,16 @@ export function ImageUpload({
     };
     reader.readAsDataURL(file);
 
-    // Generate clean filename
-    const timestamp = Date.now();
-    const cleanFilename = file.name
-      .toLowerCase()
-      .replace(/[^a-z0-9.]/g, "-")
-      .replace(/-+/g, "-");
-    const filename = `${timestamp}-${cleanFilename}`;
+    // Pass File object to parent for multipart upload
+    if (onImageUpload) {
+      onImageUpload(file);
+      console.log(`📤 File object passed to parent:`, file.name);
+    }
 
-    // Generate path for backend to save
-    // Backend should save to: public/img/{folder}/{filename}
-    // And store in DB as: /src/assets/img/{folder}/{filename}
-    // (This way backend knows original source location)
-    const dbPath = `/src/assets/img/${folder}/${filename}`;
+    // IMPORTANT: Clear formData.image to prevent Base64 being sent
+    onChange("");
 
-    // Save to form state
-    onChange(dbPath);
-
-    console.log(`📁 File to upload:`, file.name);
-    console.log(`💾 DB will store:`, dbPath);
-    console.log(`🌐 Frontend will display:`, `/img/${folder}/${filename}`);
-    console.log(`⚠️  Backend must save file to: public/img/${folder}/${filename}`);
+    console.log(`📁 File selected for upload:`, file.name);
   };
 
   // Handle URL input
@@ -98,12 +89,18 @@ export function ImageUpload({
       return;
     }
 
+    // Clear file object when using URL
+    if (onImageUpload) {
+      onImageUpload(null);
+    }
+
     try {
       // Check if it's a full URL (http/https)
       if (urlInput.startsWith("http://") || urlInput.startsWith("https://")) {
         setPreviewUrl(urlInput);
         onChange(urlInput);
         setUrlInput("");
+        console.log(`🔗 Image URL set:`, urlInput);
         return;
       }
 
@@ -146,6 +143,10 @@ export function ImageUpload({
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    // Clear file object in parent
+    if (onImageUpload) {
+      onImageUpload(null);
+    }
   };
 
   return (
@@ -161,11 +162,10 @@ export function ImageUpload({
         <button
           type="button"
           onClick={() => setUploadMode("file")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-            uploadMode === "file"
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${uploadMode === "file"
               ? "bg-blue-500 text-white border-blue-500"
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-          }`}
+            }`}
         >
           <FaUpload className="text-sm" />
           Upload File
@@ -173,11 +173,10 @@ export function ImageUpload({
         <button
           type="button"
           onClick={() => setUploadMode("url")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-            uploadMode === "url"
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${uploadMode === "url"
               ? "bg-blue-500 text-white border-blue-500"
               : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-          }`}
+            }`}
         >
           <FaLink className="text-sm" />
           Enter URL
@@ -248,9 +247,6 @@ export function ImageUpload({
           >
             <FaTimes className="text-xs" />
           </button>
-          <div className="mt-2 text-xs text-gray-600 break-all max-w-xs">
-            {previewUrl || value}
-          </div>
         </div>
       )}
 

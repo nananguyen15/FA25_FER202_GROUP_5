@@ -57,6 +57,9 @@ export function BookManagement() {
     image: "",
   });
 
+  // Image file state
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   // Load all data
   useEffect(() => {
     loadAllData();
@@ -204,10 +207,19 @@ export function BookManagement() {
       }
 
       // Add active field (default true for new books)
-      const createData = {
+      const createData: any = {
         ...formData,
         active: true,
       };
+
+      // Handle image upload
+      if (imageFile) {
+        createData.imageFile = imageFile;
+        console.log("📤 Creating book with image file:", imageFile.name);
+      } else if (formData.image && formData.image.trim()) {
+        createData.image = formData.image.trim();
+        console.log("📤 Creating book with image URL:", formData.image);
+      }
 
       await booksApi.create(createData);
       alert("Book created successfully!");
@@ -263,10 +275,19 @@ export function BookManagement() {
       }
 
       // Must include active field to prevent null constraint error
-      const updateData = {
+      const updateData: any = {
         ...formData,
         active: selectedBook.active, // Keep current active status
       };
+
+      // Handle image update
+      if (imageFile) {
+        updateData.imageFile = imageFile;
+        console.log("📤 Updating book with image file:", imageFile.name);
+      } else if (formData.image && formData.image.trim()) {
+        updateData.image = formData.image.trim();
+        console.log("📤 Updating book with image URL:", formData.image);
+      }
 
       console.log("Updating book with data:", updateData);
 
@@ -309,6 +330,7 @@ export function BookManagement() {
       publishedDate: "",
       image: "",
     });
+    setImageFile(null);
     setSelectedBook(null);
   };
 
@@ -603,6 +625,7 @@ export function BookManagement() {
           <BookForm
             formData={formData}
             onUpdate={setFormData}
+            onImageUpload={setImageFile}
             isEdit={false}
             authors={authors}
             publishers={publishers}
@@ -639,6 +662,7 @@ export function BookManagement() {
           <BookForm
             formData={formData}
             onUpdate={setFormData}
+            onImageUpload={setImageFile}
             isEdit={true}
             authors={authors}
             publishers={publishers}

@@ -47,6 +47,7 @@ export function AuthorManagement() {
     bio: "",
     image: "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Load authors
   useEffect(() => {
@@ -124,8 +125,13 @@ export function AuthorManagement() {
         bio: trimmedBio,
       };
 
-      if (formData.image && formData.image.trim()) {
+      // Handle image upload
+      if (imageFile) {
+        createData.imageFile = imageFile;
+        console.log("📤 Creating author with image file:", imageFile.name);
+      } else if (formData.image && formData.image.trim()) {
         createData.image = formData.image.trim();
+        console.log("📤 Creating author with image URL:", formData.image);
       }
 
       await authorsApi.create(createData);
@@ -168,9 +174,13 @@ export function AuthorManagement() {
         active: selectedAuthor.active, // Keep current active status
       };
 
-      // Only include image if it exists and is not empty
-      if (formData.image && formData.image.trim()) {
+      // Handle image update
+      if (imageFile) {
+        updateData.imageFile = imageFile;
+        console.log("📤 Updating author with image file:", imageFile.name);
+      } else if (formData.image && formData.image.trim()) {
         updateData.image = formData.image.trim();
+        console.log("📤 Updating author with image URL:", formData.image);
       }
 
       console.log("🔄 Sending update data:", JSON.stringify(updateData, null, 2));
@@ -228,6 +238,7 @@ export function AuthorManagement() {
       bio: "",
       image: "",
     });
+    setImageFile(null);
     setSelectedAuthor(null);
   };
 
@@ -415,8 +426,8 @@ export function AuthorManagement() {
                       <button
                         onClick={() => handleToggleStatus(author)}
                         className={`p-2 rounded transition-colors ${author.active
-                            ? "text-red-600 hover:bg-red-50"
-                            : "text-green-600 hover:bg-green-50"
+                          ? "text-red-600 hover:bg-red-50"
+                          : "text-green-600 hover:bg-green-50"
                           }`}
                         title={author.active ? "Ẩn" : "Kích hoạt"}
                       >
@@ -492,8 +503,8 @@ export function AuthorManagement() {
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
                       className={`relative inline-flex items-center px-4 py-2 text-sm font-medium border ${currentPage === pageNum
-                          ? "z-10 bg-beige-600 border-beige-600 text-white"
-                          : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                        ? "z-10 bg-beige-600 border-beige-600 text-white"
+                        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                         }`}
                     >
                       {pageNum}
@@ -531,7 +542,12 @@ export function AuthorManagement() {
             handleCreate();
           }}
         >
-          <AuthorForm formData={formData} onUpdate={setFormData} isEdit={false} />
+          <AuthorForm
+            formData={formData}
+            onUpdate={setFormData}
+            onImageUpload={setImageFile}
+            isEdit={false}
+          />
           <ModalActions
             onCancel={() => {
               setShowCreateModal(false);
@@ -560,7 +576,12 @@ export function AuthorManagement() {
             handleUpdate();
           }}
         >
-          <AuthorForm formData={formData} onUpdate={setFormData} isEdit={true} />
+          <AuthorForm
+            formData={formData}
+            onUpdate={setFormData}
+            onImageUpload={setImageFile}
+            isEdit={true}
+          />
           <ModalActions
             onCancel={() => {
               setShowEditModal(false);

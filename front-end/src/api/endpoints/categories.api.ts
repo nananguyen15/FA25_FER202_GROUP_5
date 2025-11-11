@@ -51,7 +51,7 @@ export const categoriesApi = {
     // POST create sup-category
     create: async (data: Partial<SupCategory>): Promise<SupCategory> => {
       const response = await apiClient.post<ApiResponse<SupCategory>>(
-        SUP_CATEGORIES_ENDPOINT,
+        `${SUP_CATEGORIES_ENDPOINT}/create`,
         data
       );
       return response.data.result;
@@ -60,7 +60,7 @@ export const categoriesApi = {
     // PUT update sup-category
     update: async (id: number, data: Partial<SupCategory>): Promise<SupCategory> => {
       const response = await apiClient.put<ApiResponse<SupCategory>>(
-        `${SUP_CATEGORIES_ENDPOINT}/${id}`,
+        `${SUP_CATEGORIES_ENDPOINT}/update/${id}`,
         data
       );
       return response.data.result;
@@ -129,7 +129,7 @@ export const categoriesApi = {
     // POST create sub-category
     create: async (data: Partial<SubCategory>): Promise<SubCategory> => {
       const response = await apiClient.post<ApiResponse<SubCategory>>(
-        SUB_CATEGORIES_ENDPOINT,
+        `${SUB_CATEGORIES_ENDPOINT}/create`,
         data
       );
       return response.data.result;
@@ -138,7 +138,7 @@ export const categoriesApi = {
     // PUT update sub-category
     update: async (id: number, data: Partial<SubCategory>): Promise<SubCategory> => {
       const response = await apiClient.put<ApiResponse<SubCategory>>(
-        `${SUB_CATEGORIES_ENDPOINT}/${id}`,
+        `${SUB_CATEGORIES_ENDPOINT}/update/${id}`,
         data
       );
       return response.data.result;

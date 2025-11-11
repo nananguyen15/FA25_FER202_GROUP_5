@@ -168,10 +168,11 @@ export function CateManagement() {
     try {
       // Add active field for new sup category
       const createData = {
-        ...supFormData,
-        active: true,
+        name: supFormData.name,
+        active: true, // Always set active to true for new categories
       };
 
+      console.log('Creating sup category with data:', createData);
       await categoriesApi.sup.create(createData);
       alert("Tạo danh mục cha thành công!");
       setShowCreateSupModal(false);
@@ -189,10 +190,11 @@ export function CateManagement() {
     try {
       // Must include active field to prevent null constraint error
       const updateData = {
-        ...supFormData,
+        name: supFormData.name,
         active: selectedSup.active, // Keep current active status
       };
 
+      console.log('Updating sup category with data:', updateData);
       await categoriesApi.sup.update(selectedSup.id, updateData);
       alert("Cập nhật thành công!");
       setShowEditSupModal(false);
@@ -225,10 +227,13 @@ export function CateManagement() {
     try {
       // Add active field for new sub category
       const createData = {
-        ...subFormData,
-        active: true,
+        name: subFormData.name,
+        description: subFormData.description,
+        supCategoryId: subFormData.supCategoryId,
+        active: true, // Always set active to true for new categories
       };
 
+      console.log('Creating sub category with data:', createData);
       await categoriesApi.sub.create(createData);
       alert("Tạo danh mục con thành công!");
       setShowCreateSubModal(false);
@@ -246,10 +251,13 @@ export function CateManagement() {
     try {
       // Must include active field to prevent null constraint error
       const updateData = {
-        ...subFormData,
+        name: subFormData.name,
+        description: subFormData.description,
+        supCategoryId: subFormData.supCategoryId,
         active: selectedSub.active, // Keep current active status
       };
 
+      console.log('Updating sub category with data:', updateData);
       await categoriesApi.sub.update(selectedSub.id, updateData);
       alert("Cập nhật thành công!");
       setShowEditSubModal(false);
@@ -472,8 +480,8 @@ export function CateManagement() {
                       <button
                         onClick={() => handleToggleSupStatus(sup)}
                         className={`p-2 rounded transition-colors ${sup.active
-                            ? "text-red-600 hover:bg-red-50"
-                            : "text-green-600 hover:bg-green-50"
+                          ? "text-red-600 hover:bg-red-50"
+                          : "text-green-600 hover:bg-green-50"
                           }`}
                         title={sup.active ? "Ẩn" : "Kích hoạt"}
                       >
@@ -518,8 +526,8 @@ export function CateManagement() {
                             <button
                               onClick={() => handleToggleSubStatus(sub)}
                               className={`p-2 rounded transition-colors ${sub.active
-                                  ? "text-red-600 hover:bg-red-50"
-                                  : "text-green-600 hover:bg-green-50"
+                                ? "text-red-600 hover:bg-red-50"
+                                : "text-green-600 hover:bg-green-50"
                                 }`}
                               title={sub.active ? "Ẩn" : "Kích hoạt"}
                             >
@@ -597,8 +605,8 @@ export function CateManagement() {
                         <button
                           onClick={() => handleToggleSubStatus(sub)}
                           className={`p-2 rounded transition-colors ${sub.active
-                              ? "text-red-600 hover:bg-red-50"
-                              : "text-green-600 hover:bg-green-50"
+                            ? "text-red-600 hover:bg-red-50"
+                            : "text-green-600 hover:bg-green-50"
                             }`}
                           title={sub.active ? "Ẩn" : "Kích hoạt"}
                         >

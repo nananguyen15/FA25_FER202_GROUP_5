@@ -40,7 +40,7 @@ export const publishersApi = {
   // POST create publisher
   create: async (data: Partial<Publisher>): Promise<Publisher> => {
     const response = await apiClient.post<ApiResponse<Publisher>>(
-      PUBLISHERS_ENDPOINT,
+      `${PUBLISHERS_ENDPOINT}/create`,
       data
     );
     return response.data.result;
@@ -49,7 +49,7 @@ export const publishersApi = {
   // PUT update publisher
   update: async (id: number, data: Partial<Publisher>): Promise<Publisher> => {
     const response = await apiClient.put<ApiResponse<Publisher>>(
-      `${PUBLISHERS_ENDPOINT}/${id}`,
+      `${PUBLISHERS_ENDPOINT}/update/${id}`,
       data
     );
     return response.data.result;

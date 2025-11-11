@@ -10,10 +10,11 @@ export interface AuthorFormData {
 interface AuthorFormProps {
   formData: AuthorFormData;
   onUpdate: (data: AuthorFormData) => void;
+  onImageUpload?: (file: File | null) => void;
   isEdit?: boolean;
 }
 
-export function AuthorForm({ formData, onUpdate, isEdit }: AuthorFormProps) {
+export function AuthorForm({ formData, onUpdate, onImageUpload, isEdit }: AuthorFormProps) {
   return (
     <div className="space-y-4">
       <FormField label="Author Name" required>
@@ -39,6 +40,7 @@ export function AuthorForm({ formData, onUpdate, isEdit }: AuthorFormProps) {
       <ImageUpload
         value={formData.image}
         onChange={(url) => onUpdate({ ...formData, image: url })}
+        onImageUpload={onImageUpload}
         label="Author Image"
         type="avatar"
         folder="author"

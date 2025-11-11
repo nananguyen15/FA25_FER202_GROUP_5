@@ -1,8 +1,7 @@
 /**
  * Transform backend image path to frontend accessible URL
- * Backend stores: /src/assets/img/book/hp1.webp
- * But actual files are in: public/img/book/hp1.webp
- * We need to convert to: /img/book/hp1.webp (public URL)
+ * Backend now stores: /img/avatar/123-photo.jpg (directly accessible)
+ * If old format exists (/src/assets/img/...), convert it to /img/...
  */
 export function transformImageUrl(backendPath: string | undefined | null): string | null {
   if (!backendPath || backendPath.trim() === "") {
@@ -14,7 +13,12 @@ export function transformImageUrl(backendPath: string | undefined | null): strin
     return backendPath;
   }
 
-  // Convert backend path format to public URL format
+  // If already correct format (/img/...), return as is
+  if (backendPath.startsWith("/img/")) {
+    return backendPath;
+  }
+
+  // Convert old backend path format to public URL format (backward compatibility)
   // /src/assets/img/book/hp1.webp → /img/book/hp1.webp
   let publicPath = backendPath;
   

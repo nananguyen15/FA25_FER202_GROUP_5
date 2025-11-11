@@ -19,6 +19,7 @@ export interface BookFormData {
 interface BookFormProps {
   formData: BookFormData;
   onUpdate: (data: BookFormData) => void;
+  onImageUpload?: (file: File | null) => void;
   isEdit: boolean;
   authors: Author[];
   publishers: Publisher[];
@@ -28,6 +29,7 @@ interface BookFormProps {
 export function BookForm({
   formData,
   onUpdate,
+  onImageUpload,
   isEdit,
   authors,
   publishers,
@@ -137,11 +139,11 @@ export function BookForm({
           title="Published date cannot be in the future"
         />
       </FormField>
-
       {/* Image Upload */}
       <ImageUpload
         value={formData.image}
         onChange={(url) => handleChange("image", url)}
+        onImageUpload={onImageUpload}
         label="Book Cover Image"
         type="cover"
         folder="book"

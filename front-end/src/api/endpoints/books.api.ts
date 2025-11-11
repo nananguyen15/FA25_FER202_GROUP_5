@@ -98,19 +98,72 @@ export const booksApi = {
   },
 
   // POST create new book
-  create: async (data: BookCreateRequest): Promise<Book> => {
+  create: async (data: any): Promise<Book> => {
+    const formData = new FormData();
+    
+    // Add all text fields
+    if (data.title) formData.append('title', data.title);
+    if (data.description) formData.append('description', data.description);
+    if (data.price !== undefined) formData.append('price', String(data.price));
+    if (data.authorId) formData.append('authorId', String(data.authorId));
+    if (data.publisherId) formData.append('publisherId', String(data.publisherId));
+    if (data.categoryId) formData.append('categoryId', String(data.categoryId));
+    if (data.stockQuantity !== undefined) formData.append('stockQuantity', String(data.stockQuantity));
+    if (data.publishedDate) formData.append('publishedDate', data.publishedDate);
+    if (data.active !== undefined) formData.append('active', String(data.active));
+    
+    // Handle image upload
+    if (data.imageFile) {
+      formData.append('image', data.imageFile);
+      console.log('📤 Uploading book image file:', data.imageFile.name);
+    } else if (data.image) {
+      formData.append('imageUrl', data.image);
+      console.log('📤 Setting book image URL:', data.image);
+    }
+
     const response = await apiClient.post<ApiResponse<Book>>(
-      BOOKS_ENDPOINT,
-      data
+      `${BOOKS_ENDPOINT}/create`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     return response.data.result;
   },
 
   // PUT update book
-  update: async (id: number, data: BookUpdateRequest): Promise<Book> => {
+  update: async (id: number, data: any): Promise<Book> => {
+    const formData = new FormData();
+    
+    // Add only provided fields
+    if (data.title) formData.append('title', data.title);
+    if (data.description) formData.append('description', data.description);
+    if (data.price !== undefined) formData.append('price', String(data.price));
+    if (data.authorId) formData.append('authorId', String(data.authorId));
+    if (data.publisherId) formData.append('publisherId', String(data.publisherId));
+    if (data.categoryId) formData.append('categoryId', String(data.categoryId));
+    if (data.stockQuantity !== undefined) formData.append('stockQuantity', String(data.stockQuantity));
+    if (data.publishedDate) formData.append('publishedDate', data.publishedDate);
+    
+    // Handle image update
+    if (data.imageFile) {
+      formData.append('image', data.imageFile);
+      console.log('📤 Updating book image file:', data.imageFile.name);
+    } else if (data.image) {
+      formData.append('imageUrl', data.image);
+      console.log('📤 Updating book image URL:', data.image);
+    }
+
     const response = await apiClient.put<ApiResponse<Book>>(
-      `${BOOKS_ENDPOINT}/${id}`,
-      data
+      `${BOOKS_ENDPOINT}/update/${id}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     return response.data.result;
   },
@@ -118,7 +171,7 @@ export const booksApi = {
   // PUT activate book
   activate: async (id: number): Promise<Book> => {
     const response = await apiClient.put<ApiResponse<Book>>(
-      `${BOOKS_ENDPOINT}/${id}/activate`
+      `${BOOKS_ENDPOINT}/active/${id}`
     );
     return response.data.result;
   },
@@ -126,7 +179,7 @@ export const booksApi = {
   // PUT deactivate book
   deactivate: async (id: number): Promise<Book> => {
     const response = await apiClient.put<ApiResponse<Book>>(
-      `${BOOKS_ENDPOINT}/${id}/deactivate`
+      `${BOOKS_ENDPOINT}/inactive/${id}`
     );
     return response.data.result;
   },

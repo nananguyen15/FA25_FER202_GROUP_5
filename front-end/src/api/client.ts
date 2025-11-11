@@ -18,7 +18,7 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// Public endpoints that don't require authentication
+// Public endpoints that don't require authentication (GET only)
 const PUBLIC_ENDPOINTS = [
   '/books',
   '/authors',
@@ -31,12 +31,13 @@ const PUBLIC_ENDPOINTS = [
 // Request interceptor - Add auth token only for protected endpoints
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const isPublicEndpoint = PUBLIC_ENDPOINTS.some(endpoint => 
-      config.url?.startsWith(endpoint)
-    );
+    // Public endpoints only apply to GET requests
+    const isPublicGetRequest = 
+      config.method?.toUpperCase() === 'GET' &&
+      PUBLIC_ENDPOINTS.some(endpoint => config.url?.startsWith(endpoint));
     
-    // Only add token for non-public endpoints
-    if (!isPublicEndpoint) {
+    // Add token for all non-public requests (POST, PUT, DELETE or protected GET)
+    if (!isPublicGetRequest) {
       const token = localStorage.getItem("token");
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
