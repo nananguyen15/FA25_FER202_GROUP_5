@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
-import { GoogleLoginButton } from "../Auth/GoogleLoginButton";
 import { useAuth } from "../../contexts/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { authApi } from "../../api/endpoints/auth.api";
@@ -179,10 +178,6 @@ export function SignIn() {
         </form>
 
         <div className="my-6 text-center text-beige-500">Or Login With</div>
-
-        <div className="flex gap-4">
-          <GoogleLoginButton />
-        </div>
 
         <p className="mt-8 text-center text-beige-700">
           Don't Have An Account?{" "}

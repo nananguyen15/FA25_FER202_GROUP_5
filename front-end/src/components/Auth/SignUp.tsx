@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "./AuthLayout";
-import { GoogleLoginButton } from "../Auth/GoogleLoginButton";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { authApi } from "../../api/endpoints/auth.api";
 
@@ -214,21 +213,7 @@ export function SignUp() {
             )}
           </div>
           <div className="flex items-center mb-6">
-            <input
-              type="checkbox"
-              name="agreed"
-              id="agreed"
-              checked={formData.agreed}
-              onChange={handleChange}
-              className="w-4 h-4 mr-2 rounded text-beige-700 focus:ring-beige-500"
-              required
-            />
-            <label htmlFor="agreed" className="text-sm text-beige-700">
-              I agree to the{" "}
-              <Link to="/terms" className="font-semibold hover:underline">
-                Terms & Conditions
-              </Link>
-            </label>
+          
           </div>
           {errors.agreed && (
             <p className="mb-4 text-sm text-red-500">{errors.agreed}</p>
@@ -243,10 +228,6 @@ export function SignUp() {
         </form>
 
         <div className="my-6 text-center text-beige-500">Or register with</div>
-
-        <div className="flex gap-4">
-          <GoogleLoginButton />
-        </div>
 
         <p className="mt-8 text-center text-beige-700">
           Already have an account?{" "}
