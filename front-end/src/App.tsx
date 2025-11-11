@@ -7,7 +7,6 @@ import {
 import { AuthProvider } from "./contexts/AuthContext";
 import { Homepage } from "./components/Home/Homepage";
 import { Allbooks } from "./components/Home/pages/Allbooks";
-import { Allseries } from "./components/Home/pages/Allseries";
 import { AboutUs } from "./components/AboutUs/AboutUs";
 import { QuestionAndAnswer } from "./components/Q&A/Question&Answer";
 import { SignIn } from "./components/Auth/SignIn";
@@ -49,40 +48,6 @@ import { CateManagement as StaffCateManagement } from "./components/Shared/CateM
 import { OrderManagement as StaffOrderManagement } from "./components/Shared/OrderManagement";
 import { ManageReview as StaffManageReview } from "./components/Shared/ManageReview";
 import { NotificationManagement as StaffNotificationManagement } from "./components/Shared/NotificationManagement";
-import { initializeAdminData } from "./utils/initAdminData";
-
-// Khởi tạo users một lần khi app load
-const initializeDefaultUsers = () => {
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
-  if (!users.some((u: any) => u.username === "admin")) {
-    users.push({
-      username: "admin",
-      email: "admin@bookverse.com",
-      password: "Vuivui123@",
-      role: "admin",
-      fullName: "Administrator",
-      phone: "0901234567",
-      gender: "not-specified",
-      birthDate: "1990-01-01",
-    });
-  }
-  if (!users.some((u: any) => u.username === "staff")) {
-    users.push({
-      username: "staff",
-      email: "staff@bookverse.com",
-      password: "Staff123@",
-      role: "staff",
-      fullName: "Staff Member",
-      phone: "0912345678",
-      gender: "not-specified",
-      birthDate: "1995-05-15",
-    });
-  }
-  localStorage.setItem("users", JSON.stringify(users));
-};
-
-initializeDefaultUsers();
-initializeAdminData(); // Initialize books and categories
 
 function App() {
   return (
@@ -93,8 +58,6 @@ function App() {
             <Route path="/" element={<Homepage />} />
             <Route path="/allbooks" element={<Allbooks />} />
             <Route path="/books" element={<Allbooks />} />
-            <Route path="/allseries" element={<Allseries />} />
-            <Route path="/series" element={<Allseries />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/qa" element={<QuestionAndAnswer />} />
