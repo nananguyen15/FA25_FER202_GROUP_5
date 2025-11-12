@@ -86,8 +86,7 @@ export function ProductDetail() {
           console.error("Error stack:", error.stack);
         }
         alert(
-          `Failed to load product: ${
-            error instanceof Error ? error.message : "Unknown error"
+          `Failed to load product: ${error instanceof Error ? error.message : "Unknown error"
           }`
         );
         // Don't navigate away on error, let user see the error
@@ -295,7 +294,7 @@ export function ProductDetail() {
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <span className="font-semibold">Published:</span>
-                <span className="col-span-2">{product.publishedDate}</span>
+                <span className="col-span-2">{product.publishedDate.split("-").reverse().join("-")}</span>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <span className="font-semibold">Stock:</span>
@@ -312,6 +311,10 @@ export function ProductDetail() {
               <div className="grid grid-cols-3 gap-2">
                 <span className="font-semibold">Product ID:</span>
                 <span className="col-span-2">#{product.id}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <span className="font-semibold">Total cost:</span>
+                <span className="col-span-2">${(product.price * quantity).toFixed(2)}</span>
               </div>
             </div>
 
